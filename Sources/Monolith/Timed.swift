@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+struct TimedPart {
+    let Milliseconds: UInt
+    let Items: [ByteType]
+}
+
+struct TimedMessage {
+    let Milliseconds: UInt
+    let bytes: [Byte]
+}

@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct SemanticIntConsumerOptionalPart {
+    let Name: String
+    let Condition: Condition
+    let Item: Monolith
+    let Cached: Monolith
+}

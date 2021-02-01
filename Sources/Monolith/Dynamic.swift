@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+protocol Parseable {
+    func Fix(n: Int) -> BytesPart
+}

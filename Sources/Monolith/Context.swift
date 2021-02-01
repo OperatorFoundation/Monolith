@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+struct Context {
+    let values: String//map[string]interface{}
+}
+
+func NewEmptyContext() -> Context {
+    values = String//map[string]interface
+    return Context{values:vallues}
+}

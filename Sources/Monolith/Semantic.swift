@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+struct SemanticIntProducerByteType {
+    let Name: String
+    let Value: ByteType
+}
+
+struct SemanticIntConsumerByteType {
+    let Name: String
+
+}

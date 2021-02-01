@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol Countable {
+    func Count() -> Int
+}
+
