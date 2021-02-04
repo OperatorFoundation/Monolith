@@ -8,7 +8,8 @@
 import Foundation
 
 struct Context {
-    let values: String//map[string]interface{}
+    //This replaces map of strings to interface. Any represents...well... anything
+    let values: [String:Any]
 }
 
 func NewEmptyContext() -> Context {
