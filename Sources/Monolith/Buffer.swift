@@ -9,20 +9,25 @@ import Foundation
 
 //If the variable is a pointer, turn it into a class
 public class Buffer {
-    var value: [Byte]
+    var value: [UInt8]
     
-    public init() {
-        value = []
+    public init(value: [UInt8]) {
+        self.value = value
     }
 }
 
-public func NewEmptyBuffer() -> Buffer {
-    value = make([Byte], 0)
-    return Buffer{value:value}
+enum BufferError: Error {
+    case emptyBufferError
+    case shortBufferError
 }
 
-public func NewBuffer(value: [Byte]) -> Buffer {
-    return Buffer{value:value}
+public func NewEmptyBuffer() -> Buffer {
+    let value: [UInt8] = []
+    return Buffer(value: value)
+}
+
+public func NewBuffer(value: [UInt8]) -> Buffer {
+    return Buffer(value: value)
 }
 
 extension Buffer {
@@ -30,22 +35,24 @@ extension Buffer {
         return self.value.count == 0
     }
     
-    func Pop() -> (Byte, Error) {
+    func Pop() -> (UInt8, Error?) {
         if (self.Empty()) {
-            return 0, Error
+            return (0, BufferError.emptyBufferError)
         }
         
         var b = self.value[0]
-        self.value = self.value[1...]
+        self.value = [UInt8](self.value[1...])
         
-        return b, nil
+        return (b, nil)
     }
    
-    func PopByte(n: Int) -> (Byte, Error) {
-        if (self.value.count < n)
+    func PopByte(n: Int) -> (UInt8, Error) {
+        if (self.value.count < n) {
+            
+        }
     }
     
-    func Push(value: Protocol) {
+    func Push(value: Any) {
         
     }
 }

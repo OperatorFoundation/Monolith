@@ -14,5 +14,5 @@ struct TimedPart {
 
 struct TimedMessage {
     let Milliseconds: UInt
-    let bytes: [Byte]
+    let bytes: [UInt8]
 }

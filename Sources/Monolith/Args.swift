@@ -8,15 +8,21 @@
 import Foundation
 
 struct Args {
-    var Values: [Protocol]
+    var Values: [Any]
     let Index: Int
 }
 
-func NewEmptyArgs() -> Args {
-    return Args.init(Values: <#T##[Protocol]#>, Index: 0)
+enum ArgsError: Error {
+    case emptyPopError
+    case popValueNotInt
+    case popValueNotByte
 }
 
-func NewArgs(values: [Protocol]) -> Args {
+func NewEmptyArgs() -> Args {
+    return Args.init(Values: [], Index: 0)
+}
+
+func NewArgs(values: [Any]) -> Args {
     return Args.init(Values: values, Index: 0)
 }
 
@@ -26,32 +32,60 @@ extension Args {
         return self.Values.count <= 0
     }
     
-    mutating func Pop() -> (Protocol, Error) {
+    mutating func Pop() -> (Any?, Error?) {
         if self.Values.count > 0 {
-            var value = self.Values[0]
-            var rest = self.Values[1...]
+            let value = self.Values[0]
+            let rest = [Any](self.Values[1...])
             self.Values = rest
-            return value, nil
+            return (value, nil)
         } else {
-            return nil, Error
+            return (nil, ArgsError.emptyPopError)
         }
     }
     
-    mutating func PopInt() -> (Int, Error) {
-        var value = self.Pop()
-        return value.toInt()
-    }
-    
-    mutating func PopByte() -> (Byte, Error) {
-        var value = self.Pop()
-        if value = Int {
-            return value.toByte, nil
-        } else {
-            return value, nil
+    mutating func PopInt() -> (Int?, Error?) {
+        //destructuring example below
+        let (maybeValue, maybeError) = self.Pop()
+        if let error = maybeError {
+            return (nil, error)
         }
+        
+        guard let value = maybeValue else {
+            return (nil, ArgsError.emptyPopError)
+        }
+        
+        guard let intValue = value as? Int else {
+            return (nil, ArgsError.popValueNotInt)
+        }
+        
+        return (intValue, nil)
     }
     
-    func Push(value: Protocol) {
-        self.Values = append(self.Values, value)
+    mutating func PopByte() -> (UInt8?, Error?) {
+        let (maybeValue, maybeError) = self.Pop()
+        if let error = maybeError {
+            return (nil, error)
+        }
+        
+        // guard = i expect this to be true, otherwise bail out
+        // if = if this is true, continue
+        guard let value = maybeValue else {
+            return (nil, ArgsError.emptyPopError)
+        }
+        
+        if let intValue = value as? Int {
+            let byte = UInt8(intValue)
+            return (byte, nil)
+        }
+        
+        if let byteValue = value as? UInt8 {
+            return (byteValue, nil)
+        }
+        
+        return (nil, ArgsError.popValueNotByte)
+    }
+    
+    mutating func Push(value: Any) {
+        self.Values.append(value)
     }
 }

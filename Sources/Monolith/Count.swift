@@ -11,3 +11,6 @@ protocol Countable {
     func Count() -> Int
 }
 
+extension Count {
+    
+}

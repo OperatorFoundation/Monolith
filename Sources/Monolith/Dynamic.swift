@@ -7,6 +7,14 @@
 
 import Foundation
 
-protocol Parseable {
+protocol DynamicPart {
     func Fix(n: Int) -> BytesPart
+}
+
+struct ArgsDynamicPart {
+    let Item: ByteType
+}
+
+struct SemanticLengthConsumerDynamicPart {
+    
 }

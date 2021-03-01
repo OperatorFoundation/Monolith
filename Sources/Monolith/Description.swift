@@ -10,14 +10,12 @@ enum Part
     case bytes(count: Int, ByteType)
 }
 
-typealias Byte = UInt8
-
 enum ByteType
 {
-    case fixed(Byte)
-    case enumerated(Set<Byte>)
+    case fixed(UInt8)
+    case enumerated(Set<UInt8>)
     case random(Void)
-    case semantic(Constraint<Byte>)
+    case semantic(Constraint<UInt8>)
 }
 
 struct Constraint<Value>

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Parseable {
+protocol Monolith {
     var Messageable,
     var Parseable,
     var Validateable,
@@ -19,7 +19,7 @@ struct Description {
 }
 
 protocol Byteable {
-    var Bytes(): [Byte]
+    var Bytes(): [UInt8]
 }
 
 protocol Messageable {
@@ -38,11 +38,11 @@ protocol ByteType {
 }
 
 struct FixedByType {
-    let Byte: Byte
+    let Byte: UInt8
 }
 
 struct EnumeratedByteType {
-    let Options: [Byte]
+    let Options: [UInt8]
 }
 
 struct RandomByteType {
@@ -50,7 +50,7 @@ struct RandomByteType {
 }
 
 struct RandomEnumeratedByteType {
-    let RandomOptions: [Byte]
+    let RandomOptions: [UInt8]
 }
 
 struct SemanticByteType {
@@ -58,9 +58,9 @@ struct SemanticByteType {
 }
 
 protocol Message {
-    val Byteable
+    let Byteable
 }
 
 struct BytesMessage {
-    bytes: [Byte]
+    bytes: [UInt8]
 }
