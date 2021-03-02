@@ -7,9 +7,14 @@
 
 import Foundation
 
-struct TimedPart {
-    let Milliseconds: UInt
-    let Items: [ByteType]
+public class TimedPart {
+    var Milliseconds: UInt
+    var Items: [ByteType]
+    
+    public init(Milliseconds: UInt, Items: ByteType) {
+        self.Milliseconds = Milliseconds
+        self.Items = Items
+    }
 }
 
 struct TimedMessage {
