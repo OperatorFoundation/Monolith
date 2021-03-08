@@ -7,20 +7,20 @@
 
 import Foundation
 
-public class Validity {
-    var validity: Int
-    public init(validity: Int) {
-        self.validity = validity
-    }
-}
-
-enum validity {
-    // Iota?
+public enum Validity: String {
     case Valid
     case Invalid
     case Incomplete
 }
 
+extension Validity {
+    // FIXME: I don't know where to start
+    func String() -> String {
+        return self.rawValue
+    }
+}
+
 public protocol Validateable {
+    //FIXME: uses an internal type?
     func Validate(buffer: Buffer, context: Context) -> Validity
 }

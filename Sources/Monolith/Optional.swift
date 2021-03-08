@@ -13,3 +13,4 @@ struct SemanticIntConsumerOptionalPart {
     let Item: Monolith
     let Cached: Monolith
 }
+

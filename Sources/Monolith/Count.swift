@@ -11,6 +11,41 @@ protocol Countable {
     func Count() -> Int
 }
 
-extension Count {
+extension BytesPart {
+    func Count() -> Int {
+        var result = 0
+        
+        // FIXME: how do i do that go sequence in swift?
+        for (index = 0) {
+            
+        }
+    }
+}
+
+extension FixedByType {
+    func Count() -> Int {
+        return 1
+    }
+}
+
+extension EnumeratedByteType {
+    func Count() -> Int {
+        return 1
+    }
+}
+
+extension RandomByteType {
+    func Count() -> Int {
+        return 1
+    }
+}
+
+extension RandomEnumeratedByteType {
+    func Count() -> Int {
+        return 1
+    }
+}
+
+extension TimedPart {
     
 }
