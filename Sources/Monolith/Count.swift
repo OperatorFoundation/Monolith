@@ -7,22 +7,21 @@
 
 import Foundation
 
-protocol Countable {
+public protocol Countable {
     func Count() -> Int
 }
 
 extension BytesPart {
-    func Count() -> Int {
-        var result = 0
-        
+    func Count() -> Int where T: ByteType {
         // FIXME: how do i do that go sequence in swift?
-        for (index = 0) {
-            
+        let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
+        
+        return items.count
         }
     }
-}
 
-extension FixedByType {
+
+extension FixedByteType {
     func Count() -> Int {
         return 1
     }
@@ -47,5 +46,10 @@ extension RandomEnumeratedByteType {
 }
 
 extension TimedPart {
-    
+    func Count() -> Int where T: ByteType {
+        // FIXME: how do i do that go sequence in swift?
+        let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
+        
+        return items.count
+        }
 }

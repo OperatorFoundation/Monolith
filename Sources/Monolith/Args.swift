@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Args {
+public struct Args {
     var Values: [Any]
     let Index: Int
 }

@@ -20,11 +20,11 @@ struct EqualsCondition {
 extension EqualsCondition {
     // TODO: Reflecting/Mirror doesnt seem to have what we need.
     mutating func Evaluate(value: Any) -> Bool {
-        guard let a = convertToInt64(value) as? Int64 else {
+        guard let a = convertToInt64(value: value) else {
             return false
         }
         
-        guard let b = convertToInt64(self.other) as? Int64 else {
+        guard let b = convertToInt64(value: self.other) else {
             return false
         }
         
@@ -38,11 +38,11 @@ struct GreaterCondition {
 
 extension GreaterCondition {
     mutating func Evaluate(value: Any) -> Bool {
-        guard let a = convertToInt64(value) as? Int64 else {
+        guard let a = convertToInt64(value: value) else {
             return false
         }
         
-        guard let b = convertToInt64(self.other) as? Int64 else {
+        guard let b = convertToInt64(value: self.other) else {
             return false
         }
         
@@ -55,20 +55,41 @@ struct LesserCondition {
 }
 
 extension LesserCondition {
-    guard let a = convertToInt64(value) as? Int64 else {
+    mutating func Evaluate(value: Any) -> Bool {
+        guard let a = convertToInt64(value: value) else {
         return false
     }
     
-    guard let b = convertToInt64(self.other) as? Int64 else {
+        guard let b = convertToInt64(value: self.other) else {
         return false
     }
     
     return a < b
+    }
 }
-
 func convertToInt64(value: Any) -> Int64? {
     switch value {
     case let intValue as Int:
         return Int64(intValue)
+    case let intValue as UInt:
+        return Int64(intValue)
+    case let intValue as Int8:
+        return Int64(intValue)
+    case let intValue as UInt8:
+        return Int64(intValue)
+    case let intValue as Int16:
+        return Int64(intValue)
+    case let intValue as UInt16:
+        return Int64(intValue)
+    case let intValue as Int32:
+        return Int64(intValue)
+    case let intValue as UInt32:
+        return Int64(intValue)
+    case let intValue as Int64:
+        return Int64(intValue)
+    case let intValue as UInt64:
+        return Int64(intValue)
+    default:
+        return 0
     }
 }

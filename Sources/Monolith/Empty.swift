@@ -11,19 +11,24 @@ struct Empty {
 
 }
 
-extension Empty {
-    func Parse(buffer: Buffer, args: Args, context: Context) {
-    }
-
-    func Validate(buffer: Buffer, args: Args, context: Context) -> Validity {
-    return self.Valid
-    }
-    
-    func MessageFromArgs(args: Args, context: Context) -> Message {
-    return nil
-    }
-    
+extension Empty: Countable {
+        
     func Count() -> Int {
         return 0
+    }
+}
+
+extension Empty: Parseable {
+    func Parse(buffer: Buffer, args: Args, context: Context) {
+    }
+}
+extension Empty: Validateable {
+    func Validate(buffer: Buffer, context: Context) -> Validity {
+        return .Valid
+    }
+}
+extension Empty: Messageable {
+    func MessageFromArgs(args: Args, context: Context) -> Message? {
+    return nil
     }
 }

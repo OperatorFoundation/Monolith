@@ -40,19 +40,30 @@ extension Buffer {
             return (0, BufferError.emptyBufferError)
         }
         
-        var b = self.value[0]
+        let b = self.value[0]
         self.value = [UInt8](self.value[1...])
         
         return (b, nil)
     }
    
-    func PopByte(n: Int) -> (UInt8, Error) {
+    func PopByte(n: Int) -> ([UInt8], Error?) {
         if (self.value.count < n) {
-            
+            return ([], BufferError.shortBufferError)
         }
+        let bs = [UInt8](self.value[n...])
+        self.value = [UInt8](self.value[(n+1)...])
+        return (bs, nil)
     }
     
-    func Push(value: Any) {
+    func Push(bs: [UInt8]) {
+        if (bs.isEmpty) {
+            return
+        }
+        if (bs.count == 0) {
+            return
+        }
         
+//    buffer.value = append(buffer.value, bs...)
+        self.value.append(contentsOf: self.value)
     }
 }

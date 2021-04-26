@@ -1,5 +1,5 @@
 
-protocol Parseable {
+public protocol Parseable {
     func Parse(buffer: Buffer, args: Args, context: Context)
 }
 enum ParserError: Error {
@@ -7,26 +7,28 @@ enum ParserError: Error {
 }
 extension Description {
     func Parse(buffer: Buffer, args: Args, context: Context) {
-        for (_, part) in range self.Parts {
-            part.Parse(buffer, args, context)
+        for part in self.Parts {
+            part.Parse(buffer: buffer, args: args, context: context)
         }
     }
 }
 
 extension BytesPart {
     func Parse(buffer: Buffer, args: Args, context: Context) {
-        //FIXME moar go sequences
+        for item in self.Items {
+            item.Parse(buffer: buffer, args: args, context: context)
+        }
     }
 }
 
-extension FixedByType {
+extension FixedByteType {
     func Parse(buffer: Buffer, _: Args, _: Context) {
         if buffer.Empty() {
             return
         }
         
        let (_, popError) = buffer.Pop()
-        if buffer.Empty() {
+        if popError != nil {
             return
         }
     }
@@ -54,4 +56,36 @@ extension EnumeratedByteType {
             return
         }
     }
+}
+
+extension RandomByteType {
+    func Parse(buffer: Buffer, _: Args, _: Context) {
+        if buffer.Empty() {
+            return
+        }
+
+       let (_, popError) = buffer.Pop()
+        if popError != nil {
+            return
+        }
+    }
+}
+
+extension RandomEnumeratedByteType {
+    func Parse(buffer: Buffer, _: Args, _: Context) {
+            if buffer.Empty() {
+                return
+            }
+            
+            let (arg, popError) = buffer.Pop()
+            if popError != nil {
+                return
+            }
+
+        if self.RandomOptions.contains(arg) {
+                return
+            } else {
+                return
+            }
+        }
 }

@@ -1,79 +1,94 @@
 import Foundation
 
 struct Instance {
-    let Desc: Description
+    var Desc: Description
     var Args: Args
 }
 
 extension Instance {
-    func Messages() -> [Message] {
+    mutating func Messages() -> [Message] {
         let context = NewEmptyContext()
-        let ms = self.Desc.MessagesFromArgs(self.Args, context)
-        let result: [Message] = []
+        let ms = self.Desc.MessagesFromArgs(args: self.Args, context: context)
+        var result: [Message] = []
         //TODO: the for loop uses range/len , which dont seem to be in swift
+        for m in ms {
+            result.append(m)
+        }
         return result
     }
 }
 
 extension Description
 {
-    func generate() -> Data
-    {
-        var generated: [Data] = []
-        var count = 0
-
-        for part in self.parts
-        {
-            let generatedPart = part.generate()
-            count = count + generatedPart.count
-            generated.append(generatedPart)
-        }
-
-        var result = Data(capacity: count)
-        for part in generated
-        {
-            result.append(part)
+    mutating func MessagesFromArgs(args: Args, context: Context) -> [Message] {
+        var result: [Message] = []
+        for part in self.Parts {
+            guard let m = part.MessageFromArgs(args: args, context: context) else {
+                continue
+            }
+            result.append(m)
         }
         return result
     }
 }
 
-extension Part
+extension BytesPart
 {
-    func generate() -> Data
-    {
-        switch(self)
-        {
-            case .bytes(count: let count, let byteType):
-                var results = Data(capacity: count)
-                for _ in [..<count]
-                {
-                    guard let result = byteType.generate() else { continue }
-                    results.append(result)
-                }
-                return results
-            default:
-                return Data()
+    func MessageFromArgs(args: Args, context: Context) -> Message {
+        var result: [UInt8] = []
+        
+        for item in self.Items {
+           let (maybeB, maybeError) = item.ByteFromArgs(args: args, context: context)
+            guard (maybeError == nil) else {
+                continue
+            }
+            guard let b = maybeB else {
+                continue
+            }
+            result.append(b)
+        }
+        return BytesMessage(bytes: result)
+    }
+}
+
+extension FixedByteType {
+    func ByteFromArgs(_: Args, _: Context) -> (UInt8, Error?) {
+        return (self.Byte, nil)
+    }
+}
+
+enum EnumeratedByteTypeError: Error {
+    case popError
+    case enumerationError
+}
+
+extension EnumeratedByteType {
+
+    func BytefromArgs(args: inout Args, _: inout Context) -> (UInt8, Error?) {
+        let (maybeB, maybePopError) = args.PopByte()
+        if maybePopError != nil {
+            return (0, EnumeratedByteTypeError.popError)
+        }
+        guard let b = maybeB else {
+            return (0, EnumeratedByteTypeError.popError)
+        }
+        
+        if self.Options.contains(b) {
+            return (b, nil)
+        } else {
+            return (0, EnumeratedByteTypeError.enumerationError)
         }
     }
 }
 
-//extension ByteType
-//{
-//    func generate() -> Byte?
-//    {
-//        switch(self)
-//        {
-//            case .fixed(let byte):
-//                return byte
-//            case .enumerated(let set):
-//                return set.first
-//            case .random():
-//                return UInt8.random(in: 0..<255)
-//            case .semantic(let constraint):
-//                return 0
-//            default:
-//                return nil
-//        }
-//    }
-//}
+extension RandomByteType {
+    func ByteFromArgs(_: Args, _: Context) -> (UInt8, Error?) {
+        return (UInt8.random(in: 0...255), nil)
+    }
+}
+
+extension RandomEnumeratedByteType {
+    func ByteFromArgs(_: Args, _: Context) -> (UInt8?, Error?) {
+        return (self.RandomOptions.randomElement(), nil)
+    }
+}

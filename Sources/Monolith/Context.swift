@@ -12,11 +12,11 @@ public struct Context {
     var values: [String:Any]
 }
 
-func NewEmptyContext() -> Context {
+public func NewEmptyContext() -> Context {
     return Context.init(values: [String:Any].init(minimumCapacity: 0))
 }
 
-extension Context {
+public extension Context {
     mutating func Set(name:String, value:Any) {
         self.values[name] = value
     }

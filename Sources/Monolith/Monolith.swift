@@ -7,54 +7,57 @@
 
 import Foundation
 
-typealias Monolith = Messageable & Parseable & Validateable & Countable
+public typealias Monolith = Messageable & Parseable & Validateable & Countable
 
-struct Description {
+public struct Description {
     let Parts: [Monolith]
 }
 
-protocol Byteable {
-    func Bytes() -> [UInt8]
+public protocol Byteable {
+    mutating func Bytes() -> [UInt8]
 }
 
-protocol Messageable {
-    func MessageFromArgs(args: Args, context: Context) -> Message
+public protocol Messageable {
+    func MessageFromArgs(args: Args, context: Context) -> Message?
 }
 
-struct BytesPart {
-    let Items: [ByteType]
+public struct BytesPart<T> where T: ByteType {
+    let Items: [T]
 }
 
-typealias ByteType = Validateable & Parseable & Countable //& func ByteFromArgs(args: Args, context: Context) -> (UInt8, Error)
+public protocol ByteFromArgsable {
+    func ByteFromArgs(args: Args, context: Context) -> (UInt8?, Error?)
+}
+public typealias ByteType = Validateable & Parseable & Countable & ByteFromArgsable
 
-struct FixedByType {
+public struct FixedByteType {
     let Byte: UInt8
 }
 
-struct EnumeratedByteType {
+public struct EnumeratedByteType {
     let Options: [UInt8]
 }
 
-struct RandomByteType {
+public struct RandomByteType {
     
 }
 
-struct RandomEnumeratedByteType {
+public struct RandomEnumeratedByteType {
     let RandomOptions: [UInt8]
 }
 
-struct SemanticByteType {
+public struct SemanticByteType {
     
 }
 
-typealias Message = Byteable
+public typealias Message = Byteable
 
-struct BytesMessage {
+public struct BytesMessage {
     var bytes: [UInt8]
 }
 
-extension BytesMessage {
-    mutating func Bytes() -> [UInt8] {
+extension BytesMessage: Byteable {
+    mutating public func Bytes() -> [UInt8] {
         return self.bytes
     }
 }

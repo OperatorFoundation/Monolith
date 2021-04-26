@@ -7,11 +7,11 @@
 
 import Foundation
 
-public class TimedPart {
+public class TimedPart<T> where T: ByteType {
     var Milliseconds: UInt
-    var Items: [ByteType]
+    var Items: [T]
     
-    public init(Milliseconds: UInt, Items: ByteType) {
+    public init(Milliseconds: UInt, Items: [T]) {
         self.Milliseconds = Milliseconds
         self.Items = Items
     }
