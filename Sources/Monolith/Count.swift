@@ -11,8 +11,8 @@ public protocol Countable {
     func Count() -> Int
 }
 
-extension BytesPart {
-    func Count() -> Int where T: ByteType {
+extension BytesPart: Countable {
+    public func Count() -> Int where T: ByteType {
         // FIXME: how do i do that go sequence in swift?
         let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
         
@@ -21,8 +21,8 @@ extension BytesPart {
     }
 
 
-extension FixedByteType {
-    func Count() -> Int {
+extension FixedByteType: Countable {
+    public func Count() -> Int {
         return 1
     }
 }

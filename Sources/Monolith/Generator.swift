@@ -32,9 +32,9 @@ extension Description
     }
 }
 
-extension BytesPart
+extension BytesPart: Messageable
 {
-    func MessageFromArgs(args: Args, context: Context) -> Message {
+    public func MessageFromArgs(args: Args, context: Context) -> Message? {
         var result: [UInt8] = []
         
         for item in self.Items {
@@ -51,8 +51,8 @@ extension BytesPart
     }
 }
 
-extension FixedByteType {
-    func ByteFromArgs(_: Args, _: Context) -> (UInt8, Error?) {
+extension FixedByteType: ByteFromArgsable {
+    public func ByteFromArgs(args _: Args, context _: Context) -> (UInt8?, Error?) {
         return (self.Byte, nil)
     }
 }

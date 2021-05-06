@@ -52,7 +52,7 @@ public struct SemanticByteType {
 
 public typealias Message = Byteable
 
-public struct BytesMessage {
+public struct BytesMessage: Equatable {
     var bytes: [UInt8]
 }
 

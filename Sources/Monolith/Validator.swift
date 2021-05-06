@@ -43,8 +43,8 @@ extension Description {
     }
 }
 
-extension BytesPart {
-    func Validate(buffer: Buffer, context: Context) -> Validity {
+extension BytesPart: Validateable {
+    public func Validate(buffer: Buffer, context: Context) -> Validity {
         for item in self.Items {
             let valid = item.Validate(buffer: buffer, context: context)
             switch valid {
@@ -60,8 +60,8 @@ extension BytesPart {
     }
 }
 
-extension FixedByteType {
-    func Validate(buffer: Buffer, _: Context) -> Validity {
+extension FixedByteType: Validateable {
+    public func Validate(buffer: Buffer, context _: Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }

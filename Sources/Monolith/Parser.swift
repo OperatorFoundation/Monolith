@@ -13,16 +13,16 @@ extension Description {
     }
 }
 
-extension BytesPart {
-    func Parse(buffer: Buffer, args: Args, context: Context) {
+extension BytesPart: Parseable {
+    public func Parse(buffer: Buffer, args: Args, context: Context) {
         for item in self.Items {
             item.Parse(buffer: buffer, args: args, context: context)
         }
     }
 }
 
-extension FixedByteType {
-    func Parse(buffer: Buffer, _: Args, _: Context) {
+extension FixedByteType: Parseable {
+    public func Parse(buffer: Buffer, args _: Args, context _: Context) {
         if buffer.Empty() {
             return
         }
