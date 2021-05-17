@@ -27,26 +27,26 @@ extension FixedByteType: Countable {
     }
 }
 
-extension EnumeratedByteType {
-    func Count() -> Int {
+extension EnumeratedByteType: Countable {
+    public func Count() -> Int {
         return 1
     }
 }
 
-extension RandomByteType {
-    func Count() -> Int {
+extension RandomByteType: Countable {
+    public func Count() -> Int {
         return 1
     }
 }
 
-extension RandomEnumeratedByteType {
-    func Count() -> Int {
+extension RandomEnumeratedByteType: Countable {
+    public func Count() -> Int {
         return 1
     }
 }
 
-extension TimedPart {
-    func Count() -> Int where T: ByteType {
+extension TimedPart: Countable {
+    public func Count() -> Int where T: ByteType {
         // FIXME: how do i do that go sequence in swift?
         let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
         

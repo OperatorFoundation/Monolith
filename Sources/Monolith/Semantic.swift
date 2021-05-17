@@ -67,8 +67,8 @@ extension SemanticIntProducerByteType {
         case byteError
     }
     
-    func ByteFromArgs(args: Args, context: inout Context) -> (UInt8, Error?) {
-        let (maybeB, byteError) = self.Value.ByteFromArgs(args: args, context: context)
+    func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8, Error?) {
+        let (maybeB, byteError) = self.Value.ByteFromArgs(args: &args, context: &context)
         if byteError != nil {
             return (0, ByteFromArgsError.byteError)
         }

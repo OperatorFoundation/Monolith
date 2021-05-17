@@ -34,8 +34,8 @@ extension FixedByteType: Parseable {
     }
 }
 
-extension EnumeratedByteType {
-    func Parse(buffer: Buffer, _: Args, _: Context) {
+extension EnumeratedByteType: Parseable {
+    public func Parse(buffer: Buffer, args _: Args, context _: Context) {
         if buffer.Empty() {
             return
         }
@@ -58,8 +58,8 @@ extension EnumeratedByteType {
     }
 }
 
-extension RandomByteType {
-    func Parse(buffer: Buffer, _: Args, _: Context) {
+extension RandomByteType: Parseable {
+    public func Parse(buffer: Buffer, args _: Args, context _: Context) {
         if buffer.Empty() {
             return
         }
@@ -71,8 +71,8 @@ extension RandomByteType {
     }
 }
 
-extension RandomEnumeratedByteType {
-    func Parse(buffer: Buffer, _: Args, _: Context) {
+extension RandomEnumeratedByteType: Parseable {
+    public func Parse(buffer: Buffer, args _: Args, context _: Context) {
             if buffer.Empty() {
                 return
             }

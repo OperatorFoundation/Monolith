@@ -36,9 +36,10 @@ extension BytesPart: Messageable
 {
     public func MessageFromArgs(args: Args, context: Context) -> Message? {
         var result: [UInt8] = []
-        
+        var inoutArgs = args
+        var inoutContext = context
         for item in self.Items {
-           let (maybeB, maybeError) = item.ByteFromArgs(args: args, context: context)
+            let (maybeB, maybeError) = item.ByteFromArgs(args: &inoutArgs, context: &inoutContext)
             guard (maybeError == nil) else {
                 continue
             }
@@ -52,7 +53,7 @@ extension BytesPart: Messageable
 }
 
 extension FixedByteType: ByteFromArgsable {
-    public func ByteFromArgs(args _: Args, context _: Context) -> (UInt8?, Error?) {
+    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         return (self.Byte, nil)
     }
 }
@@ -62,9 +63,8 @@ enum EnumeratedByteTypeError: Error {
     case enumerationError
 }
 
-extension EnumeratedByteType {
-
-    func BytefromArgs(args: inout Args, _: inout Context) -> (UInt8, Error?) {
+extension EnumeratedByteType: ByteFromArgsable {
+    public func ByteFromArgs(args: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         let (maybeB, maybePopError) = args.PopByte()
         if maybePopError != nil {
             return (0, EnumeratedByteTypeError.popError)
@@ -81,14 +81,14 @@ extension EnumeratedByteType {
     }
 }
 
-extension RandomByteType {
-    func ByteFromArgs(_: Args, _: Context) -> (UInt8, Error?) {
+extension RandomByteType: ByteFromArgsable {
+    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         return (UInt8.random(in: 0...255), nil)
     }
 }
 
-extension RandomEnumeratedByteType {
-    func ByteFromArgs(_: Args, _: Context) -> (UInt8?, Error?) {
+extension RandomEnumeratedByteType: ByteFromArgsable {
+    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         return (self.RandomOptions.randomElement(), nil)
     }
 }

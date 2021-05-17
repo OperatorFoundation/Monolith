@@ -80,8 +80,8 @@ extension FixedByteType: Validateable {
     }
 }
 
-extension EnumeratedByteType {
-    func Validate(buffer: Buffer, _: Context) -> Validity {
+extension EnumeratedByteType: Validateable {
+    public func Validate(buffer: Buffer, context _: Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }
@@ -99,8 +99,8 @@ extension EnumeratedByteType {
     }
 }
 
-extension RandomByteType {
-    func Validate(buffer: Buffer, _: Context) -> Validity {
+extension RandomByteType: Validateable {
+    public func Validate(buffer: Buffer, context _: Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }
@@ -113,8 +113,8 @@ extension RandomByteType {
     }
 }
 
-extension RandomEnumeratedByteType {
-    func Validate(buffer: Buffer, _: Context) -> Validity {
+extension RandomEnumeratedByteType: Validateable {
+    public func Validate(buffer: Buffer, context _: Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }

@@ -26,7 +26,7 @@ public struct BytesPart<T> where T: ByteType {
 }
 
 public protocol ByteFromArgsable {
-    func ByteFromArgs(args: Args, context: Context) -> (UInt8?, Error?)
+    func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
 }
 public typealias ByteType = Validateable & Parseable & Countable & ByteFromArgsable
 
