@@ -2,30 +2,21 @@
   "object": {
     "pins": [
       {
-        "package": "Socket",
-        "repositoryURL": "https://github.com/OperatorFoundation/BlueSocket",
-        "state": {
-          "branch": null,
-          "revision": "90212ea8b66787c2d51d03527a04748ba6ee7679",
-          "version": "1.1.0"
-        }
-      },
-      {
         "package": "Datable",
         "repositoryURL": "https://github.com/OperatorFoundation/Datable",
         "state": {
           "branch": null,
-          "revision": "aff3113e993217cae43180df9286eaa481682cce",
-          "version": "3.0.4"
+          "revision": "f935c18f2527f1b3cb6cad2511758b54effac5b1",
+          "version": "3.1.2"
         }
       },
       {
-        "package": "NetworkLinux",
-        "repositoryURL": "https://github.com/OperatorFoundation/NetworkLinux",
+        "package": "Net",
+        "repositoryURL": "https://github.com/OperatorFoundation/Net.git",
         "state": {
           "branch": null,
-          "revision": "3feb59e4d1a3287393a71cd403a187755b96f6ea",
-          "version": "0.2.5"
+          "revision": "57de753edfa076c8b6c2ce5d08bbd48e3cdc1d52",
+          "version": "0.0.1"
         }
       },
       {
@@ -33,26 +24,17 @@
         "repositoryURL": "https://github.com/OperatorFoundation/Song",
         "state": {
           "branch": null,
-          "revision": "11f0f95a24bd4c73df4507ba50929424488e2355",
-          "version": "0.1.3"
+          "revision": "04a552f299525421c3481c4282e39f285a019a1a",
+          "version": "0.2.2"
         }
       },
       {
         "package": "swift-ast",
-        "repositoryURL": "https://github.com/yanagiba/swift-ast",
+        "repositoryURL": "https://github.com/OperatorFoundation/swift-ast.git",
         "state": {
           "branch": null,
-          "revision": "e8507d78b32dbd33ea5ea975bbbc82b7613870a1",
-          "version": "0.19.9"
-        }
-      },
-      {
-        "package": "SwiftHexTools",
-        "repositoryURL": "https://github.com/OperatorFoundation/SwiftHexTools",
-        "state": {
-          "branch": null,
-          "revision": "4ce4a4f66eea05c900d447af8c07ecaac720716c",
-          "version": "1.2.2"
+          "revision": "b06dae9d1d4864df9eca6cc0761a62f7681565d4",
+          "version": "0.19.11"
         }
       }
     ]
