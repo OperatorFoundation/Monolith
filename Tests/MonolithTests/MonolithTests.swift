@@ -1,6 +1,7 @@
 import XCTest
 @testable import Monolith
 import Datable
+import Song
 
 final class MonolithTests: XCTestCase
 {
@@ -18,6 +19,18 @@ final class MonolithTests: XCTestCase
             return
         }
         XCTAssertEqual(byteResult, correct)
+    }
+    
+    func testDescriptionSerialization()
+    {
+        var parts: [Monolith] = []
+        let part = BytesPart(Items: [FixedByteType(Byte: 0x0A)])
+        parts.append(part)
+        let desc = Description(Parts: parts)
+        
+        let encoder = SongEncoder()
+        
+        let descriptionData = encoder.encode(desc)
     }
     
     func testParts()
