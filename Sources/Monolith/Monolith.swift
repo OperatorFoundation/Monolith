@@ -7,46 +7,90 @@
 
 import Foundation
 
-public typealias Monolith = Messageable & Parseable & Validateable & Countable
+public typealias Monolith = Messageable & Parseable & Validateable & Countable & Codable
 
-public struct Description {
-    let Parts: [Monolith]
+public indirect enum ByteTypeConfig: Codable
+{
+    case fixed(FixedByteType)
+    case enumerated(EnumeratedByteType)
+    case random(RandomByteType)
+    case randomEnumerated(RandomEnumeratedByteType)
+    case semanticIntConsumer(SemanticIntConsumerByteType)
+    case semanticIntProducer(SemanticIntProducerByteType)
 }
 
-public protocol Byteable {
+public enum MonolithConfig: Codable
+{
+    case bytes(BytesPart)
+}
+
+
+public struct Description: Codable
+{
+    let Parts: [MonolithConfig]
+}
+
+public protocol Byteable
+{
     mutating func Bytes() -> [UInt8]
 }
 
-public protocol Messageable {
+public protocol Messageable: Codable
+{
     func MessageFromArgs(args: Args, context: Context) -> Message?
 }
 
-public struct BytesPart<T> where T: ByteType {
-    let Items: [T]
+public struct BytesPart: Codable
+{
+    let Items: [ByteTypeConfig]
 }
 
-public protocol ByteFromArgsable {
+public protocol ByteFromArgsable
+{
     func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
 }
+
+extension ByteTypeConfig: ByteFromArgsable
+{
+    public func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
+    {
+        switch self
+        {
+            case .enumerated(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+            case .fixed(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+            case .random(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+            case .randomEnumerated(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+            case .semanticIntConsumer(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+            case .semanticIntProducer(let value):
+                return value.ByteFromArgs(args: &args, context: &context)
+        }
+    }
+}
+
 public typealias ByteType = Validateable & Parseable & Countable & ByteFromArgsable
 
-public struct FixedByteType {
+public struct FixedByteType: Codable {
     let Byte: UInt8
 }
 
-public struct EnumeratedByteType {
+public struct EnumeratedByteType: Codable {
     let Options: [UInt8]
 }
 
-public struct RandomByteType {
+public struct RandomByteType: Codable {
     
 }
 
-public struct RandomEnumeratedByteType {
+public struct RandomEnumeratedByteType: Codable {
     let RandomOptions: [UInt8]
 }
 
-public struct SemanticByteType {
+public struct SemanticByteType: Codable {
     
 }
 

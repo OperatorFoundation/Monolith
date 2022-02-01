@@ -11,6 +11,10 @@ struct Empty {
 
 }
 
+extension Empty: Codable {
+    
+}
+
 extension Empty: Countable {
         
     func Count() -> Int {
@@ -19,14 +23,16 @@ extension Empty: Countable {
 }
 
 extension Empty: Parseable {
-    func Parse(buffer: Buffer, args: Args, context: Context) {
+    func Parse(buffer: Buffer, args: inout Args, context: inout Context) {
     }
 }
+
 extension Empty: Validateable {
-    func Validate(buffer: Buffer, context: Context) -> Validity {
+    func Validate(buffer: Buffer, context: inout Context) -> Validity {
         return .Valid
     }
 }
+
 extension Empty: Messageable {
     func MessageFromArgs(args: Args, context: Context) -> Message? {
     return nil

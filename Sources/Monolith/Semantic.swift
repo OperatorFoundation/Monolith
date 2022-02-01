@@ -11,41 +11,50 @@ enum SemanticError: Error {
     case popError
 }
 
-struct SemanticIntProducerByteType<T> where T: ByteType {
+public struct SemanticIntProducerByteType: Codable {
     let Name: String
-    let Value: T
+    let Value: ByteTypeConfig
 }
 
-struct SemanticIntConsumerByteType {
+public struct SemanticIntConsumerByteType: Codable
+{
     let Name: String
-
 }
 
-extension SemanticIntProducerByteType {
-    func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+extension SemanticIntProducerByteType
+{
+    func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
+        if buffer.Empty()
+        {
             return Validity.Incomplete
         }
         
         let (b, maybeError) = buffer.Pop()
-        guard maybeError == nil else {
+        guard maybeError == nil else
+        {
             return .Invalid
         }
         
         let subbuffer = NewBuffer(value: [b])
         
-        if self.Value.Validate(buffer: subbuffer, context: context) == Validity.Valid {
+        if self.Value.Validate(buffer: subbuffer, context: &context) == Validity.Valid
+        {
             let intValue = Int(b)
             context.Set(name: self.Name, value: intValue)
             
             return .Valid
-        } else {
+        }
+        else
+        {
             return .Invalid
         }
     }
     
-    func Parse(buffer: Buffer, _: Args, context: inout Context) {
-        if buffer.Empty() {
+    func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
+        if buffer.Empty()
+        {
             return
         }
         
@@ -59,15 +68,18 @@ extension SemanticIntProducerByteType {
         context.Set(name: self.Name, value: value)
     }
     
-    func Count() -> Int {
+    func Count() -> Int
+    {
         return self.Value.Count()
     }
     
-    enum ByteFromArgsError: Error {
+    enum ByteFromArgsError: Error
+    {
         case byteError
     }
     
-    func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8, Error?) {
+    func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8, Error?)
+    {
         let (maybeB, byteError) = self.Value.ByteFromArgs(args: &args, context: &context)
         if byteError != nil {
             return (0, ByteFromArgsError.byteError)
@@ -107,7 +119,8 @@ extension SemanticIntConsumerByteType {
         }
     }
     
-    func Parse(buffer: Buffer, args: inout Args, context: inout Context) {
+    func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
         if buffer.Empty() {
             return
         }
@@ -135,7 +148,7 @@ extension SemanticIntConsumerByteType {
         case undefinedVariableError
     }
     
-    func ByteFromArgs(_: Args, context: inout Context) -> (UInt8, Error?) {
+    func ByteFromArgs(args: inout Args, context: inout Context) -> (UInt8, Error?) {
         let (value, ok) = context.GetInt(name: self.Name)
         if ok {
             return (UInt8(value), nil)

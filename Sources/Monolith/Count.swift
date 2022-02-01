@@ -11,15 +11,35 @@ public protocol Countable {
     func Count() -> Int
 }
 
-extension BytesPart: Countable {
-    public func Count() -> Int where T: ByteType {
-        // FIXME: how do i do that go sequence in swift?
-        let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
-        
-        return items.count
+extension BytesPart: Countable
+{
+    public func Count() -> Int
+    {
+        return self.Items.count
+    }
+}
+
+extension ByteTypeConfig: Countable
+{
+    public func Count() -> Int
+    {
+        switch self
+        {
+            case .fixed(let fixedByteType):
+                return fixedByteType.Count()
+            case .enumerated(let enumeratedByteType):
+                return enumeratedByteType.Count()
+            case .random(let randomByteType):
+                return randomByteType.Count()
+            case .randomEnumerated(let randomEnumeratedByteType):
+                return randomEnumeratedByteType.Count()
+            case .semanticIntConsumer(let semanticIntConsumerByteType):
+                return semanticIntConsumerByteType.Count()
+            case .semanticIntProducer(let semanticIntProducerByteType):
+                return  semanticIntProducerByteType.Count()
         }
     }
-
+}
 
 extension FixedByteType: Countable {
     public func Count() -> Int {
@@ -51,5 +71,5 @@ extension TimedPart: Countable {
         let items = Array<T>(repeating: self.Items as! T, count: self.Items.count)
         
         return items.count
-        }
+    }
 }

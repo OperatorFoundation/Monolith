@@ -13,22 +13,23 @@ public enum Validity: String {
     case Incomplete
 }
 
-extension Validity {
-    // FIXME: I don't know where to start
-    func String() -> String {
+extension Validity
+{
+    func String() -> String
+    {
         return self.rawValue
     }
 }
 
-public protocol Validateable {
-    //FIXME: uses an internal type?
-    func Validate(buffer: Buffer, context: Context) -> Validity
+public protocol Validateable
+{
+    func Validate(buffer: Buffer, context: inout Context) -> Validity
 }
 
 extension Description {
-    func Validate(buffer: Buffer, context: Context) -> Validity {
+    func Validate(buffer: Buffer, context: inout Context) -> Validity {
         for part in self.Parts {
-            let valid = part.Validate(buffer: buffer, context: context)
+            let valid = part.Validate(buffer: buffer, context: &context)
             switch valid {
             case .Valid:
                 continue
@@ -43,45 +44,92 @@ extension Description {
     }
 }
 
-extension BytesPart: Validateable {
-    public func Validate(buffer: Buffer, context: Context) -> Validity {
-        for item in self.Items {
-            let valid = item.Validate(buffer: buffer, context: context)
-            switch valid {
-            case .Valid:
-                continue
-            case .Invalid:
-                return .Invalid
-            case .Incomplete:
-                return .Incomplete
+extension BytesPart: Validateable
+{
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
+        for item in self.Items
+        {
+            let valid = item.Validate(buffer: buffer, context: &context)
+            switch valid
+            {
+                case .Valid:
+                    continue
+                case .Invalid:
+                    return .Invalid
+                case .Incomplete:
+                    return .Incomplete
             }
         }
+        
         return .Valid
     }
 }
 
-extension FixedByteType: Validateable {
-    public func Validate(buffer: Buffer, context _: Context) -> Validity {
-        if buffer.Empty() {
+extension ByteTypeConfig: Validateable
+{
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
+        switch self
+        {
+            case .fixed(let fixedByteType):
+                return fixedByteType.Validate(buffer: buffer, context: &context)
+            case .enumerated(let enumeratedByteType):
+                return enumeratedByteType.Validate(buffer: buffer, context: &context)
+            case .random(let randomByteType):
+                return randomByteType.Validate(buffer: buffer, context: &context)
+            case .randomEnumerated(let randomEnumeratedByteType):
+                return randomEnumeratedByteType.Validate(buffer: buffer, context: &context)
+            case .semanticIntConsumer(let semanticIntConsumerByteType):
+                return semanticIntConsumerByteType.Validate(buffer: buffer, context: &context)
+            case .semanticIntProducer(let semanticIntProducerByteType):
+                return semanticIntProducerByteType.Validate(buffer: buffer, context: &context)
+        }
+    }
+}
+
+extension MonolithConfig: Validateable
+{
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
+        switch self
+        {
+            case .bytes(let bytesPart):
+                return bytesPart.Validate(buffer: buffer, context: &context)
+        }
+    }
+}
+
+extension FixedByteType: Validateable
+{
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
+        if buffer.Empty()
+        {
             return .Incomplete
         }
         
         let (b, popError) = buffer.Pop()
         
-        if popError != nil {
+        if popError != nil
+        {
             return .Invalid
         }
         
-        if b == self.Byte {
+        if b == self.Byte
+        {
             return .Valid
-        } else {
+        }
+        else
+        {
             return .Invalid
         }
     }
 }
 
-extension EnumeratedByteType: Validateable {
-    public func Validate(buffer: Buffer, context _: Context) -> Validity {
+extension EnumeratedByteType: Validateable
+{
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }
@@ -91,16 +139,19 @@ extension EnumeratedByteType: Validateable {
             return .Invalid
         }
         
-        if self.Options.contains(b) {
+        if self.Options.contains(b)
+        {
             return .Valid
-        } else {
+        }
+        else
+        {
             return .Invalid
         }
     }
 }
 
 extension RandomByteType: Validateable {
-    public func Validate(buffer: Buffer, context _: Context) -> Validity {
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }
@@ -114,7 +165,7 @@ extension RandomByteType: Validateable {
 }
 
 extension RandomEnumeratedByteType: Validateable {
-    public func Validate(buffer: Buffer, context _: Context) -> Validity {
+    public func Validate(buffer: Buffer, context: inout Context) -> Validity {
         if buffer.Empty() {
             return .Incomplete
         }

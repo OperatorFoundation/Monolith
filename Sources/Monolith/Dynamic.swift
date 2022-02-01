@@ -8,40 +8,39 @@
 import Foundation
 
 protocol DynamicPart {
-    func Fix<T>(n: Int) -> BytesPart<T> where T: ByteType
+    func Fix(n: Int) -> BytesPart
 }
 
-// TODO: Make everything with ByteType in the struct like this
-struct ArgsDynamicPart<ItemType> where ItemType: ByteType
+struct ArgsDynamicPart: Codable
 {
-    let Item: ItemType
+    let Item: ByteTypeConfig
 }
 
-struct SemanticLengthConsumerDynamicPart<ItemType> where ItemType: ByteType {
+struct SemanticLengthConsumerDynamicPart: Codable
+{
     let Name: String
-    let Item: ItemType
-    // TODO: if the struct variable has a pointer, make it var rather than let
-    var Cached: BytesPart<ItemType>?
+    let Item: ByteTypeConfig
+    var Cached: BytesPart?
 }
 
-struct SemanticSeedConsumerDynamicPart<ItemType> where ItemType: ByteType {
+struct SemanticSeedConsumerDynamicPart: Codable
+{
     let Name: String
-    let Item: ItemType
-    var Cached: BytesPart<ItemType>?
+    let Item: ByteTypeConfig
+    var Cached: BytesPart?
 }
 
-// TODO: For functions that use ByteType, make it like this
-extension ArgsDynamicPart {
-    func Fix(n: Int) -> BytesPart<ItemType>
+extension ArgsDynamicPart
+{
+    func Fix(n: Int) -> BytesPart
     {
-        // TODO: repeating makes the go loop redundant
-        let items = Array<ItemType>(repeating: self.Item, count: n)
+        let items = Array<ByteTypeConfig>(repeating: self.Item, count: n)
         
-        //FIXME: Why curly braces and why don't they work?
         return BytesPart(Items: items)
     }
     
-    func MessageFromArgs(args: inout Args, context: Context) -> Message? {
+    func MessageFromArgs(args: inout Args, context: Context) -> Message?
+    {
         if args.Empty() {
             return nil
         }
@@ -61,16 +60,15 @@ extension ArgsDynamicPart {
 }
 
 extension SemanticLengthConsumerDynamicPart {
-    func Fix(n: Int) -> BytesPart<ItemType>
+    func Fix(n: Int) -> BytesPart
     {
-        // TODO: repeating makes the go loop redundant
-        let items = Array<ItemType>(repeating: self.Item, count: n)
+        let items = Array<ByteTypeConfig>(repeating: self.Item, count: n)
         
-        //FIXME: Why curly braces and why don't they work?
         return BytesPart(Items: items)
     }
     
-    mutating func Parse(buffer: Buffer, args: Args, context: inout Context) {
+    mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
         if buffer.Empty() {
             return
         }
@@ -82,11 +80,12 @@ extension SemanticLengthConsumerDynamicPart {
             }
             
             self.Cached = self.Fix(n: n)
-            cached.Parse(buffer: buffer, args: args, context: context)
+            cached.Parse(buffer: buffer, args: &args, context: &context)
         }
     }
     
-    mutating func Validate(buffer: Buffer, context: inout Context) -> Validity {
+    mutating func Validate(buffer: Buffer, context: inout Context) -> Validity
+    {
         if buffer.Empty() {
             return Validity.Invalid
         }
@@ -98,8 +97,9 @@ extension SemanticLengthConsumerDynamicPart {
             guard let cached = self.Cached else {
                 return .Invalid
             }
-            return cached.Validate(buffer: buffer, context: context)
-        } else {
+            return cached.Validate(buffer: buffer, context: &context)
+        }
+        else {
             return Validity.Invalid
         }
     }
@@ -123,30 +123,32 @@ extension SemanticLengthConsumerDynamicPart {
     }
 }
 
-extension SemanticSeedConsumerDynamicPart {
-    func Fix(seed: Int) -> BytesPart<ItemType>
+extension SemanticSeedConsumerDynamicPart
+{
+    func Fix(seed: Int) -> BytesPart
     {
-        //FIXME: make a pseudorandom number generator that probs doesnt exist in swift :(
+        var monolithRandomNumberGenerator = MonolithRandomNumberGenerator(seed: UInt64(seed))
+        let randomFromSeed = UInt8.random(in: 0...255, using: &monolithRandomNumberGenerator)
+        let items = Array<ByteTypeConfig>(repeating: self.Item, count: Int(randomFromSeed))
         
-        // TODO: repeating makes the go loop redundant
-        let items = Array<ItemType>(repeating: self.Item, count: seed)
-        
-        //FIXME: Why curly braces and why don't they work?
         return BytesPart(Items: items)
     }
     
-    mutating func Parse(buffer: Buffer, args: Args, context: inout Context) {
+    mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
         if buffer.Empty() {
             return
         }
         
         let (seed, ok) = context.GetInt(name: self.Name)
-        if (ok) {
+        if (ok)
+        {
             guard let cached = self.Cached else {
                 return
             }
+            
             self.Cached = self.Fix(seed: seed)
-            cached.Parse(buffer: buffer, args: args, context: context)
+            cached.Parse(buffer: buffer, args: &args, context: &context)
         }
     }
     
@@ -162,7 +164,7 @@ extension SemanticSeedConsumerDynamicPart {
             guard let cached = self.Cached else {
                 return .Invalid
             }
-            return cached.Validate(buffer: buffer, context: context)
+            return cached.Validate(buffer: buffer, context: &context)
         } else {
             return Validity.Invalid
         }

@@ -52,6 +52,18 @@ extension BytesPart: Messageable
     }
 }
 
+extension MonolithConfig: Messageable
+{
+    public func MessageFromArgs(args: Args, context: Context) -> Message?
+    {
+        switch self
+        {
+            case .bytes(let bytesPart):
+                return bytesPart.MessageFromArgs(args: args, context: context)
+        }
+    }
+}
+
 extension FixedByteType: ByteFromArgsable {
     public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         return (self.Byte, nil)

@@ -23,7 +23,7 @@ extension SemanticIntConsumerOptionalPart {
         }
     }
     
-    mutating func Parse(buffer: Buffer, args: Args, context: inout Context) {
+    mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context) {
         if buffer.Empty() {
             return
         }
@@ -31,7 +31,7 @@ extension SemanticIntConsumerOptionalPart {
         let (n, ok) = context.GetInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
-            self.Cached!.Parse(buffer: buffer, args: args, context: context)
+            self.Cached!.Parse(buffer: buffer, args: &args, context: &context)
         }
     }
     
@@ -43,8 +43,9 @@ extension SemanticIntConsumerOptionalPart {
         let (n, ok) = context.GetInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
-            return self.Cached!.Validate(buffer: buffer, context: context) as! Byteable
-        } else {
+            return self.Cached!.Validate(buffer: buffer, context: &context) as! Byteable
+        }
+        else {
             return Validity.Invalid as! Byteable
         }
     }
@@ -54,7 +55,8 @@ extension SemanticIntConsumerOptionalPart {
         if (ok) {
             self.Cached = self.Fix(n: n)
             return self.Cached!.MessageFromArgs(args: args, context: context)
-        } else {
+        }
+        else {
             return nil
         }
     }
