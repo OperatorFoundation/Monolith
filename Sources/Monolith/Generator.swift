@@ -1,18 +1,22 @@
 import Foundation
 
-struct Instance {
+struct Instance
+{
     var Desc: Description
     var Args: Args
 }
 
-extension Instance {
-    mutating func Messages() -> [Message] {
+extension Instance
+{
+    mutating func Messages() -> [Message]
+    {
         let context = NewEmptyContext()
-        let ms = self.Desc.MessagesFromArgs(args: self.Args, context: context)
+        let messages = self.Desc.MessagesFromArgs(args: self.Args, context: context)
         var result: [Message] = []
-        //TODO: the for loop uses range/len , which dont seem to be in swift
-        for m in ms {
-            result.append(m)
+
+        for message in messages
+        {
+            result.append(message)
         }
         return result
     }
@@ -20,14 +24,20 @@ extension Instance {
 
 extension Description
 {
-    mutating func MessagesFromArgs(args: Args, context: Context) -> [Message] {
+    mutating func MessagesFromArgs(args: Args, context: Context) -> [Message]
+    {
         var result: [Message] = []
-        for part in self.Parts {
-            guard let m = part.MessageFromArgs(args: args, context: context) else {
+        
+        for part in self.Parts
+        {
+            guard let m = part.MessageFromArgs(args: args, context: context) else
+            {
                 continue
             }
+            
             result.append(m)
         }
+        
         return result
     }
 }

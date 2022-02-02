@@ -21,7 +21,7 @@ final class MonolithTests: XCTestCase
         XCTAssertEqual(byteResult, correct)
     }
     
-    func testDescriptionSerialization()
+    func testDescriptionSongSerialization()
     {
         var parts: [MonolithConfig] = []
         let part: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
@@ -30,7 +30,24 @@ final class MonolithTests: XCTestCase
 
         let encoder = SongEncoder()
 
-        guard let descriptionData = try? encoder.encode(description)
+        guard let _ = try? encoder.encode(description)
+        else
+        {
+            XCTFail()
+            return
+        }
+    }
+    
+    func testDescriptionJSONSerialization()
+    {
+        var parts: [MonolithConfig] = []
+        let part: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
+        parts.append(part)
+        let description = Description(Parts: parts)
+
+        let encoder = JSONEncoder()
+
+        guard let _ = try? encoder.encode(description)
         else
         {
             XCTFail()
@@ -121,59 +138,60 @@ final class MonolithTests: XCTestCase
         XCTAssertEqual(byteResult, correct)
     }
     
-//    func testRandomEnumeratedItems()
-//    {
-//        let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
-//        
-//        var parts: [MonolithConfig] = []
-//        let part1 = BytesPart(Items: [
-//            RandomEnumeratedByteType(RandomOptions: set),
-//            RandomEnumeratedByteType(RandomOptions: set)
-//        ])
-//        parts.append(part1)
-//        let part2 = BytesPart(Items: [
-//            RandomEnumeratedByteType(RandomOptions: set),
-//            RandomEnumeratedByteType(RandomOptions: set)
-//        ])
-//        parts.append(part2)
-//        
-//        let desc = Description(Parts: parts)
-//        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
-//        var instance = Instance(Desc: desc, Args: args)
-//        let result = instance.Messages()
-//        guard let byteResult = result as? [BytesMessage] else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(byteResult.count, 2)
-//    }
-//    
-//    func testRandomItems()
-//    {
-//        // no correct var for random in swift
-//        var parts: [MonolithConfig] = []
-//        let part1 = BytesPart(Items: [
-//            RandomByteType(),
-//            RandomByteType()
-//        ])
-//        parts.append(part1)
-//        let part2 = BytesPart(Items: [
-//            RandomByteType(),
-//            RandomByteType()
-//        ])
-//        parts.append(part2)
-//        
-//        let desc = Description(Parts: parts)
-//        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
-//        var instance = Instance(Desc: desc, Args: args)
-//        let result = instance.Messages()
-//        guard let byteResult = result as? [BytesMessage] else {
-//            XCTFail()
-//            return
-//        }
-//        //check to make sure result is of the right length(2)
-//        XCTAssertEqual(byteResult.count, 2)
-//    }
+    func testRandomEnumeratedItems()
+    {
+        let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
+        
+        var parts: [MonolithConfig] = []
+        let part1: MonolithConfig = .bytes(BytesPart(Items: [
+            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set)),
+            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set))
+        ]))
+        parts.append(part1)
+        let part2: MonolithConfig = .bytes(BytesPart(Items: [
+            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set)),
+            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set))
+        ]))
+        parts.append(part2)
+        
+        let desc = Description(Parts: parts)
+        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
+        var instance = Instance(Desc: desc, Args: args)
+        let result = instance.Messages()
+        guard let byteResult = result as? [BytesMessage] else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(byteResult.count, 2)
+    }
+    
+    func testRandomItems()
+    {
+        // no correct var for random in swift
+        var parts: [MonolithConfig] = []
+        let part1: MonolithConfig = .bytes(BytesPart(Items: [
+            .random(RandomByteType()),
+            .random(RandomByteType())
+        ]))
+        parts.append(part1)
+        let part2: MonolithConfig = .bytes(BytesPart(Items: [
+            .random(RandomByteType()),
+            .random(RandomByteType())
+        ]))
+        parts.append(part2)
+        
+        let desc = Description(Parts: parts)
+        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
+        var instance = Instance(Desc: desc, Args: args)
+        let result = instance.Messages()
+        guard let byteResult = result as? [BytesMessage] else {
+            XCTFail()
+            return
+        }
+        //check to make sure result is of the right length(2)
+        XCTAssertEqual(byteResult.count, 2)
+    }
+     
 //    func TestTimedParts()
 //    {
 //        let correct = [
@@ -182,14 +200,14 @@ final class MonolithTests: XCTestCase
 //        ]
 //
 //        var parts: [MonolithConfig] = []
-//        let part1 = BytesPart(Items: [
-//            TimedPart(Milliseconds: 0, Items: [ByteType(FixedByteType(Byte: 0x0A))])
-//        ])
+//        let part1: MonolithConfig = .bytes(BytesPart(Items: [
+//            .timed(TimedPart(Milliseconds: 0, Items: [ByteType(FixedByteType(Byte: 0x0A))]))
+//        ]))
 //        parts.append(part1)
-//        let part2 = BytesPart(Items: [
-//            RandomByteType(),
-//            RandomByteType()
-//        ])
+//        let part2: MonolithConfig = .bytes(BytesPart(Items: [
+//            .random(RandomByteType()),
+//            .random(RandomByteType())
+//        ]))
 //        parts.append(part2)
 //
 //        let desc = Description(Parts: parts)
@@ -200,8 +218,8 @@ final class MonolithTests: XCTestCase
 //            XCTFail()
 //            return
 //        }
-//        XCTAssertEqual(byteResult, correct)
 //
+//        XCTAssertEqual(byteResult, correct)
 //    }
     
 }
