@@ -8,7 +8,8 @@
 import Foundation
 
 //If the variable is a pointer, turn it into a class
-public class Buffer {
+public class Buffer: Codable
+{
     var value: [UInt8]
     
     public init(value: [UInt8]) {
