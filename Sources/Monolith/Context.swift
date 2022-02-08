@@ -11,15 +11,12 @@ public struct Context
 {
     //This replaces map of strings to interface. Any represents...well... anything
     var values: [String: Any]
-}
-
-public func NewEmptyContext() -> Context
-{
-    return Context.init(values: [String:Any].init(minimumCapacity: 0))
-}
-
-public extension Context
-{
+    
+    public init()
+    {
+        self.values = [String: Any]()
+    }
+    
     mutating func Set(name:String, value: Any)
     {
         self.values[name] = value

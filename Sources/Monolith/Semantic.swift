@@ -36,7 +36,7 @@ extension SemanticIntProducerByteType
             return .Invalid
         }
         
-        let subbuffer = NewBuffer(value: [b])
+        let subbuffer = Buffer(value: [b])
         
         if self.Value.Validate(buffer: subbuffer, context: &context) == Validity.Valid
         {

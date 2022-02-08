@@ -12,26 +12,16 @@ public class Buffer: Codable
 {
     var value: [UInt8]
     
-    public init(value: [UInt8]) {
+    public init()
+    {
+        self.value = [UInt8]()
+    }
+    
+    public init(value: [UInt8])
+    {
         self.value = value
     }
-}
-
-enum BufferError: Error {
-    case emptyBufferError
-    case shortBufferError
-}
-
-public func NewEmptyBuffer() -> Buffer {
-    let value: [UInt8] = []
-    return Buffer(value: value)
-}
-
-public func NewBuffer(value: [UInt8]) -> Buffer {
-    return Buffer(value: value)
-}
-
-extension Buffer {
+    
     func Empty() -> Bool{
         return self.value.count == 0
     }
@@ -67,4 +57,9 @@ extension Buffer {
 //    buffer.value = append(buffer.value, bs...)
         self.value.append(contentsOf: self.value)
     }
+}
+
+enum BufferError: Error {
+    case emptyBufferError
+    case shortBufferError
 }

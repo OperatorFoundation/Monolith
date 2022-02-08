@@ -10,7 +10,7 @@ extension Instance
 {
     mutating func Messages() -> [Message]
     {
-        var context = NewEmptyContext()
+        var context = Context()
         let messages = self.Desc.MessagesFromArgs(args: &self.Args, context: &context)
         var result: [Message] = []
 
