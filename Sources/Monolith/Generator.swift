@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Instance
+public struct Instance: Codable
 {
     var Desc: Description
     var Args: Args

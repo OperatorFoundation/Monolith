@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct Context {
+public struct Context
+{
     //This replaces map of strings to interface. Any represents...well... anything
     var values: [String: Any]
 }

@@ -135,7 +135,7 @@ extension SemanticIntConsumerByteType {
         let (value, ok) = context.GetInt(name: self.Name)
         if ok {
             if n == value {
-                args.Push(value: n)
+                args.Push(value: .int(n))
             }
         }
     }

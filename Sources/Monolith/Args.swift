@@ -7,12 +7,20 @@
 
 import Foundation
 
-public struct Args {
-    var Values: [Any]
+public struct Args: Codable
+{
+    var Values: [ArgValue]
     let Index: Int
 }
 
-enum ArgsError: Error {
+public enum ArgValue: Codable
+{
+    case int(Int)
+    case byte(UInt8)
+}
+
+enum ArgsError: Error
+{
     case emptyPopError
     case popValueNotInt
     case popValueNotByte
@@ -22,20 +30,47 @@ func NewEmptyArgs() -> Args {
     return Args.init(Values: [], Index: 0)
 }
 
-func NewArgs(values: [Any]) -> Args {
+func NewArgs(values: [ArgValue]) -> Args
+{
     return Args.init(Values: values, Index: 0)
 }
 
-extension Args {
-    func Empty() -> Bool{
+func NewIntArgs(values: [Int]) -> Args
+{
+    let argValues = values.map
+    {
+        (argValue: Int) -> ArgValue in
+        
+        return ArgValue.int(argValue)
+    }
+    
+    return Args.init(Values: argValues, Index: 0)
+}
+
+func NewByteArgs(values: [Int]) -> Args
+{
+    let argValues = values.map
+    {
+        (argValue: Int) -> ArgValue in
+        
+        return ArgValue.byte(UInt8(argValue))
+    }
+    
+    return Args.init(Values: argValues, Index: 0)
+}
+
+extension Args
+{
+    func Empty() -> Bool
+    {
         //self takes the place of the lowercase variable from go 
         return self.Values.count <= 0
     }
     
-    mutating func Pop() -> (Any?, Error?) {
+    mutating func Pop() -> (ArgValue?, Error?) {
         if self.Values.count > 0 {
             let value = self.Values[0]
-            let rest = [Any](self.Values[1...])
+            let rest = [ArgValue](self.Values[1...])
             self.Values = rest
             return (value, nil)
         } else {
@@ -54,11 +89,13 @@ extension Args {
             return (nil, ArgsError.emptyPopError)
         }
         
-        guard let intValue = value as? Int else {
-            return (nil, ArgsError.popValueNotInt)
+        switch value
+        {
+            case .int(let intValue):
+                return (intValue, nil)
+            case .byte(let byteValue):
+                return(Int(byteValue), nil)
         }
-        
-        return (intValue, nil)
     }
     
     mutating func PopByte() -> (UInt8?, Error?) {
@@ -73,19 +110,16 @@ extension Args {
             return (nil, ArgsError.emptyPopError)
         }
         
-        if let intValue = value as? Int {
-            let byte = UInt8(intValue)
-            return (byte, nil)
+        switch value {
+            case .int(let int):
+                let byte = UInt8(int)
+                return (byte, nil)
+            case .byte(let uint8):
+                return (uint8, nil)
         }
-        
-        if let byteValue = value as? UInt8 {
-            return (byteValue, nil)
-        }
-        
-        return (nil, ArgsError.popValueNotByte)
     }
     
-    mutating func Push(value: Any) {
+    mutating func Push(value: ArgValue) {
         self.Values.append(value)
     }
 }

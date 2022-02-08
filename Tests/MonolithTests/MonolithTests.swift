@@ -128,7 +128,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
@@ -156,7 +156,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
@@ -182,7 +182,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
