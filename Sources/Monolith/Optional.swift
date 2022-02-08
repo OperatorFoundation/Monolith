@@ -50,11 +50,11 @@ extension SemanticIntConsumerOptionalPart {
         }
     }
     
-    mutating func MessageFromArgs(args: Args, context: inout Context) -> Message? {
+    mutating func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
         let (n, ok) = context.GetInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
-            return self.Cached!.MessageFromArgs(args: args, context: context)
+            return self.Cached!.MessageFromArgs(args: &args, context: &context)
         }
         else {
             return nil

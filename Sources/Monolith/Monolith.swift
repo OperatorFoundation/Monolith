@@ -37,7 +37,7 @@ public protocol Byteable
 
 public protocol Messageable: Codable
 {
-    func MessageFromArgs(args: Args, context: Context) -> Message?
+    func MessageFromArgs(args: inout Args, context: inout Context) -> Message?
 }
 
 public struct BytesPart: Codable

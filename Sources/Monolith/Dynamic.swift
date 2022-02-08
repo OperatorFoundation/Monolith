@@ -39,7 +39,7 @@ extension ArgsDynamicPart
         return BytesPart(Items: items)
     }
     
-    func MessageFromArgs(args: inout Args, context: Context) -> Message?
+    func MessageFromArgs(args: inout Args, context: inout Context) -> Message?
     {
         if args.Empty() {
             return nil
@@ -55,7 +55,7 @@ extension ArgsDynamicPart
         }
         
         let bp = self.Fix(n: n)
-        return bp.MessageFromArgs(args: args, context: context)
+        return bp.MessageFromArgs(args: &args, context: &context)
     }
 }
 

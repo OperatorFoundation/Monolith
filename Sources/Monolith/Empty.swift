@@ -34,7 +34,7 @@ extension Empty: Validateable {
 }
 
 extension Empty: Messageable {
-    func MessageFromArgs(args: Args, context: Context) -> Message? {
+    func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
     return nil
     }
 }

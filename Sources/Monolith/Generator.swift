@@ -1,6 +1,6 @@
 import Foundation
 
-struct Instance
+public struct Instance
 {
     var Desc: Description
     var Args: Args
@@ -10,8 +10,8 @@ extension Instance
 {
     mutating func Messages() -> [Message]
     {
-        let context = NewEmptyContext()
-        let messages = self.Desc.MessagesFromArgs(args: self.Args, context: context)
+        var context = NewEmptyContext()
+        let messages = self.Desc.MessagesFromArgs(args: &self.Args, context: &context)
         var result: [Message] = []
 
         for message in messages
@@ -24,13 +24,13 @@ extension Instance
 
 extension Description
 {
-    mutating func MessagesFromArgs(args: Args, context: Context) -> [Message]
+    mutating func MessagesFromArgs(args: inout Args, context: inout Context) -> [Message]
     {
         var result: [Message] = []
         
         for part in self.Parts
         {
-            guard let m = part.MessageFromArgs(args: args, context: context) else
+            guard let m = part.MessageFromArgs(args: &args, context: &context) else
             {
                 continue
             }
@@ -44,12 +44,10 @@ extension Description
 
 extension BytesPart: Messageable
 {
-    public func MessageFromArgs(args: Args, context: Context) -> Message? {
+    public func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
         var result: [UInt8] = []
-        var inoutArgs = args
-        var inoutContext = context
         for item in self.Items {
-            let (maybeB, maybeError) = item.ByteFromArgs(args: &inoutArgs, context: &inoutContext)
+            let (maybeB, maybeError) = item.ByteFromArgs(args: &args, context: &context)
             guard (maybeError == nil) else {
                 continue
             }
@@ -64,12 +62,12 @@ extension BytesPart: Messageable
 
 extension MonolithConfig: Messageable
 {
-    public func MessageFromArgs(args: Args, context: Context) -> Message?
+    public func MessageFromArgs(args: inout Args, context: inout Context) -> Message?
     {
         switch self
         {
             case .bytes(let bytesPart):
-                return bytesPart.MessageFromArgs(args: args, context: context)
+                return bytesPart.MessageFromArgs(args: &args, context: &context)
         }
     }
 }

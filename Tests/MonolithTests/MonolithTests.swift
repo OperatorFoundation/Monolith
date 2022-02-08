@@ -135,6 +135,7 @@ final class MonolithTests: XCTestCase
             XCTFail()
             return
         }
+        
         XCTAssertEqual(byteResult, correct)
     }
     
