@@ -24,7 +24,7 @@ extension SemanticIntConsumerOptionalPart {
     }
     
     mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context) {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
@@ -36,7 +36,7 @@ extension SemanticIntConsumerOptionalPart {
     }
     
     mutating func Validate(buffer: Buffer, context: inout Context) -> Message {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return Validity.Invalid as! Byteable
         }
         

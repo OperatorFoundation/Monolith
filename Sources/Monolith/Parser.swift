@@ -69,11 +69,11 @@ extension FixedByteType: Parseable
 {
     public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
-       let (_, popError) = buffer.Pop()
+       let (_, popError) = buffer.pop()
         if popError != nil {
             return
         }
@@ -83,12 +83,12 @@ extension FixedByteType: Parseable
 extension EnumeratedByteType: Parseable {
     public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
-        let (arg, _) = buffer.Pop()
-        if buffer.Empty() {
+        let (arg, _) = buffer.pop()
+        if buffer.isEmpty() {
             return
         }
         
@@ -109,11 +109,11 @@ extension RandomByteType: Parseable
 {
     public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
 
-       let (_, popError) = buffer.Pop()
+       let (_, popError) = buffer.pop()
         if popError != nil {
             return
         }
@@ -124,11 +124,11 @@ extension RandomEnumeratedByteType: Parseable
 {
     public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-            if buffer.Empty() {
+            if buffer.isEmpty() {
                 return
             }
             
-            let (arg, popError) = buffer.Pop()
+            let (arg, popError) = buffer.pop()
             if popError != nil {
                 return
             }

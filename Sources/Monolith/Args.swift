@@ -9,84 +9,78 @@ import Foundation
 
 public struct Args: Codable
 {
-    var Values: [ArgValue]
-    let Index: Int
-}
-
-public enum ArgValue: Codable
-{
-    case int(Int)
-    case byte(UInt8)
-}
-
-enum ArgsError: Error
-{
-    case emptyPopError
-    case popValueNotInt
-    case popValueNotByte
-}
-
-func NewEmptyArgs() -> Args {
-    return Args.init(Values: [], Index: 0)
-}
-
-func NewArgs(values: [ArgValue]) -> Args
-{
-    return Args.init(Values: values, Index: 0)
-}
-
-func NewIntArgs(values: [Int]) -> Args
-{
-    let argValues = values.map
+    var values: [ValueType]
+    let index: Int
+    
+    public init()
     {
-        (argValue: Int) -> ArgValue in
+        values = []
+        index = 0
+    }
+    
+    public init(values: [ValueType], index: Int)
+    {
+        self.values = values
+        self.index = index
+    }
+    
+    public init(intValues: [Int])
+    {
+        let argValues = intValues.map
+        {
+            (argValue: Int) -> ValueType in
+            
+            return ValueType.int(argValue)
+        }
         
-        return ArgValue.int(argValue)
+        self.init(values: argValues, index: 0)
     }
     
-    return Args.init(Values: argValues, Index: 0)
-}
-
-func NewByteArgs(values: [Int]) -> Args
-{
-    let argValues = values.map
+    public init(byteValues: [Int])
     {
-        (argValue: Int) -> ArgValue in
+        let argValues = byteValues.map
+        {
+            (argValue: Int) -> ValueType in
+            
+            return ValueType.byte(UInt8(argValue))
+        }
         
-        return ArgValue.byte(UInt8(argValue))
+        self.init(values: argValues, index: 0)
     }
     
-    return Args.init(Values: argValues, Index: 0)
-}
-
-extension Args
-{
-    func Empty() -> Bool
+    func isEmpty() -> Bool
     {
-        //self takes the place of the lowercase variable from go 
-        return self.Values.count <= 0
+        return self.values.isEmpty
     }
     
-    mutating func Pop() -> (ArgValue?, Error?) {
-        if self.Values.count > 0 {
-            let value = self.Values[0]
-            let rest = [ArgValue](self.Values[1...])
-            self.Values = rest
+    mutating func pop() -> (ValueType?, Error?)
+    {
+        if self.values.count > 0
+        {
+            let value = self.values[0]
+            let rest = [ValueType](self.values[1...])
+            self.values = rest
+            
             return (value, nil)
-        } else {
-            return (nil, ArgsError.emptyPopError)
+        }
+        else
+        {
+            return (nil, Error.emptyPopError)
         }
     }
     
-    mutating func PopInt() -> (Int?, Error?) {
-        //destructuring example below
-        let (maybeValue, maybeError) = self.Pop()
-        if let error = maybeError {
+    mutating func popInt() -> (Int?, Error?)
+    {
+        let (maybeValue, maybeError) = self.pop()
+        
+        if let error = maybeError
+        {
             return (nil, error)
         }
         
-        guard let value = maybeValue else {
-            return (nil, ArgsError.emptyPopError)
+        guard let value = maybeValue else
+        {
+            return (nil, Error.emptyPopError)
         }
         
         switch value
@@ -98,28 +92,57 @@ extension Args
         }
     }
     
-    mutating func PopByte() -> (UInt8?, Error?) {
-        let (maybeValue, maybeError) = self.Pop()
-        if let error = maybeError {
+    mutating func popByte() -> (UInt8?, Error?)
+    {
+        let (maybeValue, maybeError) = self.pop()
+        if let error = maybeError
+        {
             return (nil, error)
         }
         
-        // guard = i expect this to be true, otherwise bail out
-        // if = if this is true, continue
-        guard let value = maybeValue else {
-            return (nil, ArgsError.emptyPopError)
+        guard let value = maybeValue else
+        {
+            return (nil, Error.emptyPopError)
         }
         
-        switch value {
+        switch value
+        {
             case .int(let int):
-                let byte = UInt8(int)
-                return (byte, nil)
+                return (UInt8(int), nil)
             case .byte(let uint8):
                 return (uint8, nil)
         }
     }
     
-    mutating func Push(value: ArgValue) {
-        self.Values.append(value)
+    mutating func push(value: ValueType)
+    {
+        self.values.append(value)
+    }
+    
+    public enum Error: LocalizedError
+    {
+        case emptyPopError
+        //case popValueNotByte
+        //case popValueNotInt
+        
+        
+        public var errorDescription: String?
+        {
+            switch self
+            {
+                case .emptyPopError:
+                    return "Attempted to pop a value from an empty Args value array."
+            }
+        }
+    }
+    
+    public enum ValueType: Codable
+    {
+        case int(Int)
+        case byte(UInt8)
     }
 }
+
+
+
+

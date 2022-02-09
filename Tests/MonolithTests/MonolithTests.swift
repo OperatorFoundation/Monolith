@@ -12,7 +12,7 @@ final class MonolithTests: XCTestCase
         let part = MonolithConfig.bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
         parts.append(part)
         let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: NewEmptyArgs())
+        var instance = Instance(Desc: desc, Args: Args())
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
@@ -21,22 +21,22 @@ final class MonolithTests: XCTestCase
         XCTAssertEqual(byteResult, correct)
     }
     
-    func testDescriptionSongSerialization()
-    {
-        var parts: [MonolithConfig] = []
-        let part: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
-        parts.append(part)
-        let description = Description(Parts: parts)
-
-        let encoder = SongEncoder()
-
-        guard let _ = try? encoder.encode(description)
-        else
-        {
-            XCTFail()
-            return
-        }
-    }
+//    func testDescriptionSongSerialization()
+//    {
+//        var parts: [MonolithConfig] = []
+//        let part: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
+//        parts.append(part)
+//        let description = Description(Parts: parts)
+//
+//        let encoder = SongEncoder()
+//
+//        guard let _ = try? encoder.encode(description)
+//        else
+//        {
+//            XCTFail()
+//            return
+//        }
+//    }
     
     func testDescriptionJSONSerialization()
     {
@@ -69,7 +69,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: NewEmptyArgs())
+        var instance = Instance(Desc: desc, Args: Args())
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
@@ -98,7 +98,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: NewEmptyArgs())
+        var instance = Instance(Desc: desc, Args: Args())
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
@@ -128,7 +128,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
@@ -156,7 +156,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {
@@ -182,7 +182,7 @@ final class MonolithTests: XCTestCase
         parts.append(part2)
         
         let desc = Description(Parts: parts)
-        let args = NewByteArgs(values: [0x11, 0x12, 0x14, 0x13])
+        let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
         var instance = Instance(Desc: desc, Args: args)
         let result = instance.Messages()
         guard let byteResult = result as? [BytesMessage] else {

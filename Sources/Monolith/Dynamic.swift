@@ -41,11 +41,11 @@ extension ArgsDynamicPart
     
     func MessageFromArgs(args: inout Args, context: inout Context) -> Message?
     {
-        if args.Empty() {
+        if args.isEmpty() {
             return nil
         }
         
-        let (maybeN, maybeError) = args.PopInt()
+        let (maybeN, maybeError) = args.popInt()
         guard (maybeError == nil) else {
             return nil
         }
@@ -69,7 +69,7 @@ extension SemanticLengthConsumerDynamicPart {
     
     mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
@@ -86,7 +86,7 @@ extension SemanticLengthConsumerDynamicPart {
     
     mutating func Validate(buffer: Buffer, context: inout Context) -> Validity
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return Validity.Invalid
         }
         
@@ -136,7 +136,7 @@ extension SemanticSeedConsumerDynamicPart
     
     mutating func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
@@ -153,7 +153,7 @@ extension SemanticSeedConsumerDynamicPart
     }
     
     mutating func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return Validity.Invalid
         }
         

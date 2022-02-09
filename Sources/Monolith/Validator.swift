@@ -104,12 +104,12 @@ extension FixedByteType: Validateable
 {
     public func Validate(buffer: Buffer, context: inout Context) -> Validity
     {
-        if buffer.Empty()
+        if buffer.isEmpty()
         {
             return .Incomplete
         }
         
-        let (b, popError) = buffer.Pop()
+        let (b, popError) = buffer.pop()
         
         if popError != nil
         {
@@ -130,11 +130,11 @@ extension FixedByteType: Validateable
 extension EnumeratedByteType: Validateable
 {
     public func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return .Incomplete
         }
         
-        let (b, popError) = buffer.Pop()
+        let (b, popError) = buffer.pop()
         if popError != nil {
             return .Invalid
         }
@@ -152,11 +152,11 @@ extension EnumeratedByteType: Validateable
 
 extension RandomByteType: Validateable {
     public func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return .Incomplete
         }
         
-        let (_, popError) = buffer.Pop()
+        let (_, popError) = buffer.pop()
         if popError != nil {
             return .Invalid
         }
@@ -166,11 +166,11 @@ extension RandomByteType: Validateable {
 
 extension RandomEnumeratedByteType: Validateable {
     public func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return .Incomplete
         }
         
-        let (b, popError) = buffer.Pop()
+        let (b, popError) = buffer.pop()
         if popError != nil {
             return .Invalid
         }

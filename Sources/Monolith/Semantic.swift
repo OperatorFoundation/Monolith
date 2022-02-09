@@ -25,12 +25,12 @@ extension SemanticIntProducerByteType
 {
     func Validate(buffer: Buffer, context: inout Context) -> Validity
     {
-        if buffer.Empty()
+        if buffer.isEmpty()
         {
             return Validity.Incomplete
         }
         
-        let (b, maybeError) = buffer.Pop()
+        let (b, maybeError) = buffer.pop()
         guard maybeError == nil else
         {
             return .Invalid
@@ -53,12 +53,12 @@ extension SemanticIntProducerByteType
     
     func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty()
+        if buffer.isEmpty()
         {
             return
         }
         
-        let (b, popError) = buffer.Pop()
+        let (b, popError) = buffer.pop()
         if popError != nil {
             return
         }
@@ -96,11 +96,11 @@ extension SemanticIntProducerByteType
 
 extension SemanticIntConsumerByteType {
     func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return Validity.Incomplete
         }
         
-        let (b, maybeError) = buffer.Pop()
+        let (b, maybeError) = buffer.pop()
         guard maybeError == nil else {
             return .Invalid
         }
@@ -121,11 +121,11 @@ extension SemanticIntConsumerByteType {
     
     func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.Empty() {
+        if buffer.isEmpty() {
             return
         }
         
-        let (b, popError) = buffer.Pop()
+        let (b, popError) = buffer.pop()
         if popError != nil {
             return
         }
@@ -135,7 +135,7 @@ extension SemanticIntConsumerByteType {
         let (value, ok) = context.GetInt(name: self.Name)
         if ok {
             if n == value {
-                args.Push(value: .int(n))
+                args.push(value: .int(n))
             }
         }
     }

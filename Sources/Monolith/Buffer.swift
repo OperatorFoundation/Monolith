@@ -7,7 +7,6 @@
 
 import Foundation
 
-//If the variable is a pointer, turn it into a class
 public class Buffer: Codable
 {
     var value: [UInt8]
@@ -22,44 +21,58 @@ public class Buffer: Codable
         self.value = value
     }
     
-    func Empty() -> Bool{
-        return self.value.count == 0
+    func isEmpty() -> Bool
+    {
+        return self.value.isEmpty
     }
     
-    func Pop() -> (UInt8, Error?) {
-        if (self.Empty()) {
-            return (0, BufferError.emptyBufferError)
+    /// Removes the first element from the value array
+    func pop() -> (UInt8, Error?)
+    {
+        if (self.value.isEmpty)
+        {
+            return (0, Error.emptyBufferError)
         }
         
-        let b = self.value[0]
-        self.value = [UInt8](self.value[1...])
+        let first = self.value.removeFirst()
         
-        return (b, nil)
+        return (first, nil)
     }
    
-    func PopByte(n: Int) -> ([UInt8], Error?) {
-        if (self.value.count < n) {
-            return ([], BufferError.shortBufferError)
-        }
-        let bs = [UInt8](self.value[n...])
-        self.value = [UInt8](self.value[(n+1)...])
-        return (bs, nil)
-    }
-    
-    func Push(bs: [UInt8]) {
-        if (bs.isEmpty) {
-            return
-        }
-        if (bs.count == 0) {
-            return
+    /// Removes the first n elements from the value array
+    func popByte(elementsToRemove: Int) -> ([UInt8], Error?)
+    {
+        if (self.value.count < elementsToRemove)
+        {
+            return ([], Error.shortBufferError(elementsToRemove: elementsToRemove))
         }
         
-//    buffer.value = append(buffer.value, bs...)
-        self.value.append(contentsOf: self.value)
+        let removed = [UInt8](self.value[..<elementsToRemove])
+        self.value = [UInt8](self.value[elementsToRemove...])
+        
+        return (removed, nil)
+    }
+    
+    func push(bytes: [UInt8])
+    {
+        self.value.append(contentsOf: bytes)
+    }
+    
+    public enum Error: LocalizedError
+    {
+        case emptyBufferError
+        case shortBufferError(elementsToRemove: Int)
+        
+        public var errorDescription: String?
+        {
+            switch self {
+                case .emptyBufferError:
+                    return "The monolith buffer is empty."
+                case .shortBufferError(let elementsToRemove):
+                    return "The monolith buffer is to short to remove \(elementsToRemove) elements/"
+            }
+        }
     }
 }
 
-enum BufferError: Error {
-    case emptyBufferError
-    case shortBufferError
-}
+

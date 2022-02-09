@@ -85,7 +85,7 @@ enum EnumeratedByteTypeError: Error {
 
 extension EnumeratedByteType: ByteFromArgsable {
     public func ByteFromArgs(args: inout Args, context _: inout Context) -> (UInt8?, Error?) {
-        let (maybeB, maybePopError) = args.PopByte()
+        let (maybeB, maybePopError) = args.popByte()
         if maybePopError != nil {
             return (0, EnumeratedByteTypeError.popError)
         }
