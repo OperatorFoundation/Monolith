@@ -5,7 +5,7 @@ public struct Instance: Codable
     var description: Description
     var args: Args
     
-    mutating func messages() -> [Message]
+    public mutating func messages() -> [Message]
     {
         var context = Context()
         let messages = self.description.MessagesFromArgs(args: &self.args, context: &context)

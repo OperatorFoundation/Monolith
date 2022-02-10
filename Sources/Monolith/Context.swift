@@ -9,7 +9,7 @@ import Foundation
 
 public struct Context
 {
-    var values: [String: Any]
+    public var values: [String: Any]
     
     public init()
     {

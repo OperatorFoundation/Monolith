@@ -9,8 +9,8 @@ import Foundation
 
 public struct Args: Codable
 {
-    var values: [ValueType]
-    let index: Int
+    public var values: [ValueType]
+    public let index: Int
     
     public init()
     {

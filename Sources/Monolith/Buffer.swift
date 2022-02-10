@@ -9,7 +9,7 @@ import Foundation
 
 public class Buffer: Codable
 {
-    var value: [UInt8]
+    public var value: [UInt8]
     
     public init()
     {

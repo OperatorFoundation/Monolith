@@ -26,7 +26,7 @@ public enum MonolithConfig: Codable
 
 public struct Description: Codable
 {
-    let parts: [MonolithConfig]
+    public let parts: [MonolithConfig]
 }
 
 public protocol Byteable
@@ -41,7 +41,7 @@ public protocol Messageable
 
 public struct BytesPart: Codable
 {
-    let items: [ByteTypeConfig]
+    public let items: [ByteTypeConfig]
 }
 
 public protocol ByteFromArgsable
@@ -74,11 +74,11 @@ extension ByteTypeConfig: ByteFromArgsable
 public typealias ByteType = Validateable & Parseable & Countable & ByteFromArgsable
 
 public struct FixedByteType: Codable {
-    let byte: UInt8
+    public let byte: UInt8
 }
 
 public struct EnumeratedByteType: Codable {
-    let options: [UInt8]
+    public let options: [UInt8]
 }
 
 public struct RandomByteType: Codable {
@@ -86,7 +86,7 @@ public struct RandomByteType: Codable {
 }
 
 public struct RandomEnumeratedByteType: Codable {
-    let randomOptions: [UInt8]
+    public let randomOptions: [UInt8]
 }
 
 public struct SemanticByteType: Codable {
@@ -97,7 +97,7 @@ public typealias Message = Byteable
 
 public struct BytesMessage: Message, Equatable
 {
-    var messageBytes: [UInt8]
+    public var messageBytes: [UInt8]
     
     public mutating func bytes() -> [UInt8]
     {
