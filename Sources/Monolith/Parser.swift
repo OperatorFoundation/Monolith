@@ -1,7 +1,7 @@
 
 public protocol Parseable
 {
-    func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    func parse(buffer: Buffer, args: inout Args, context: inout Context)
 }
 
 enum ParserError: Error
@@ -9,97 +9,105 @@ enum ParserError: Error
     case popError
 }
 
-extension Description
+extension Description: Parseable
 {
-    func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
         for part in self.parts
         {
-            part.Parse(buffer: buffer, args: &args, context: &context)
+            part.parse(buffer: buffer, args: &args, context: &context)
         }
     }
 }
 
 extension BytesPart: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
         for item in self.items
         {
-            item.Parse(buffer: buffer, args: &args, context: &context)
+            item.parse(buffer: buffer, args: &args, context: &context)
         }
     }
 }
 
 extension ByteTypeConfig: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
         switch self
         {
             case .fixed(let fixedByteType):
-                fixedByteType.Parse(buffer: buffer, args: &args, context: &context)
+                fixedByteType.parse(buffer: buffer, args: &args, context: &context)
             case .enumerated(let enumeratedByteType):
-                enumeratedByteType.Parse(buffer: buffer, args: &args, context: &context)
+                enumeratedByteType.parse(buffer: buffer, args: &args, context: &context)
             case .random(let randomByteType):
-                randomByteType.Parse(buffer: buffer, args: &args, context: &context)
+                randomByteType.parse(buffer: buffer, args: &args, context: &context)
             case .randomEnumerated(let randomEnumeratedByteType):
-                randomEnumeratedByteType.Parse(buffer: buffer, args: &args, context: &context)
+                randomEnumeratedByteType.parse(buffer: buffer, args: &args, context: &context)
             case .semanticIntConsumer(let semanticIntConsumerByteType):
-                semanticIntConsumerByteType.Parse(buffer: buffer, args: &args, context: &context)
+                semanticIntConsumerByteType.parse(buffer: buffer, args: &args, context: &context)
             case .semanticIntProducer(let semanticIntProducerByteType):
-                semanticIntProducerByteType.Parse(buffer: buffer, args: &args, context: &context)
+                semanticIntProducerByteType.parse(buffer: buffer, args: &args, context: &context)
         }
     }
 }
 
 extension MonolithConfig: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
         switch self
         {
             case .bytes(let bytesPart):
-                bytesPart.Parse(buffer: buffer, args: &args, context: &context)
+                bytesPart.parse(buffer: buffer, args: &args, context: &context)
         }
     }
 }
 
 extension FixedByteType: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.isEmpty() {
+        if buffer.isEmpty()
+        {
             return
         }
         
        let (_, popError) = buffer.pop()
-        if popError != nil {
+        
+        if popError != nil
+        {
             return
         }
     }
 }
 
-extension EnumeratedByteType: Parseable {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+extension EnumeratedByteType: Parseable
+{
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.isEmpty() {
+        if buffer.isEmpty()
+        {
             return
         }
         
         let (arg, _) = buffer.pop()
-        if buffer.isEmpty() {
+        
+        if buffer.isEmpty()
+        {
             return
         }
-        
-        //TODO: reference this vs go if the code looks extra weird
-        let options = self.options
-        
-        //TODO: use this to initialize a set
+                
         let set = Set(options)
-        if set.contains(arg) {
+        
+        // FIXME: What is the intent here?
+        if set.contains(arg)
+        {
             return
-        } else {
+        }
+        else
+        {
             return
         }
     }
@@ -107,14 +115,17 @@ extension EnumeratedByteType: Parseable {
 
 extension RandomByteType: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        if buffer.isEmpty() {
+        if buffer.isEmpty()
+        {
             return
         }
 
        let (_, popError) = buffer.pop()
-        if popError != nil {
+        
+        if popError != nil
+        {
             return
         }
     }
@@ -122,21 +133,71 @@ extension RandomByteType: Parseable
 
 extension RandomEnumeratedByteType: Parseable
 {
-    public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-            if buffer.isEmpty() {
-                return
-            }
-            
-            let (arg, popError) = buffer.pop()
-            if popError != nil {
-                return
-            }
+        if buffer.isEmpty()
+        {
+            return
+        }
+        
+        let (arg, popError) = buffer.pop()
+        if popError != nil
+        {
+            return
+        }
 
-        if self.randomOptions.contains(arg) {
-                return
-            } else {
-                return
+        if self.randomOptions.contains(arg)
+        {
+            return
+        }
+        else
+        {
+            return
+        }
+    }
+}
+
+extension SemanticIntConsumerByteType: Parseable
+{
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
+        if buffer.isEmpty()
+        {
+            return
+        }
+        
+        let (b, popError) = buffer.pop()
+        if popError != nil {
+            return
+        }
+        
+        let n = Int(b)
+        
+        let (value, ok) = context.getInt(name: self.name)
+        if ok {
+            if n == value {
+                args.push(value: .int(n))
             }
         }
+    }
+}
+
+extension SemanticIntProducerByteType: Parseable
+{
+    public func parse(buffer: Buffer, args: inout Args, context: inout Context)
+    {
+        if buffer.isEmpty()
+        {
+            return
+        }
+        
+        let (b, popError) = buffer.pop()
+        if popError != nil {
+            return
+        }
+        
+        let value = Int(b)
+        
+        context.set(name: self.name, value: value)
+    }
 }

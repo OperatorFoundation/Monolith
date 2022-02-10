@@ -9,18 +9,19 @@ import Foundation
 
 public class TimedPart<T> where T: ByteType
 {
-    var Milliseconds: UInt
-    var Items: [T]
+    var milliseconds: UInt
+    var items: [T]
     
-    public init(Milliseconds: UInt, Items: [T])
+    public init(milliseconds: UInt, items: [T])
     {
-        self.Milliseconds = Milliseconds
-        self.Items = Items
+        self.milliseconds = milliseconds
+        self.items = items
     }
 }
 
-struct TimedMessage {
-    let Milliseconds: UInt
+struct TimedMessage
+{
+    let milliseconds: UInt
     let bytes: [UInt8]
 }
 

@@ -76,46 +76,55 @@ extension MonolithConfig: Messageable
 
 extension FixedByteType: ByteFromArgsable
 {
-    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?)
+    {
         return (self.byte, nil)
     }
 }
 
-enum EnumeratedByteTypeError: Error
-{
-    case popError
-    case enumerationError
-}
-
 extension EnumeratedByteType: ByteFromArgsable
 {
-    public func byteFromArgs(args: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+    public func byteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
+    {
         let (maybeB, maybePopError) = args.popByte()
-        if maybePopError != nil {
-            return (0, EnumeratedByteTypeError.popError)
-        }
-        guard let b = maybeB else {
+        
+        if maybePopError != nil
+        {
             return (0, EnumeratedByteTypeError.popError)
         }
         
-        if self.options.contains(b) {
+        guard let b = maybeB else
+            { return (0, EnumeratedByteTypeError.popError) }
+        
+        if self.options.contains(b)
+        {
             return (b, nil)
-        } else {
+        }
+        else
+        {
             return (0, EnumeratedByteTypeError.enumerationError)
         }
+    }
+    
+    public enum EnumeratedByteTypeError: Error
+    {
+        case popError
+        case enumerationError
     }
 }
 
 extension RandomByteType: ByteFromArgsable
 {
-    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?)
+    {
         return (UInt8.random(in: 0...255), nil)
     }
 }
 
 extension RandomEnumeratedByteType: ByteFromArgsable
 {
-    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?)
+    {
         return (self.randomOptions.randomElement(), nil)
     }
 }
@@ -124,16 +133,19 @@ extension SemanticIntProducerByteType: ByteFromArgsable
 {
     public func byteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
     {
-        let (maybeB, byteError) = self.Value.byteFromArgs(args: &args, context: &context)
-        if byteError != nil {
+        let (maybeB, byteError) = self.value.byteFromArgs(args: &args, context: &context)
+        
+        if byteError != nil
+        {
             return (0, ByteFromArgsError.byteError)
         }
         
-        guard let b = maybeB else {
-            return (0, ByteFromArgsError.byteError)
-        }
+        guard let b = maybeB else
+            { return (0, ByteFromArgsError.byteError) }
+        
         let n = Int(b)
-        context.set(name: self.Name, value: n)
+        context.set(name: self.name, value: n)
+        
         return (b, nil)
     }
     
@@ -147,7 +159,7 @@ extension SemanticIntConsumerByteType: ByteFromArgsable
 {
     public func byteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
     {
-        let (value, ok) = context.getInt(name: self.Name)
+        let (value, ok) = context.getInt(name: self.name)
         
         if ok
         {

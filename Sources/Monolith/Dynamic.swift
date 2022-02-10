@@ -70,7 +70,7 @@ struct SemanticLengthConsumerDynamicPart: DynamicPart, Codable
             
             self.cached = self.fix(count: n)
             
-            cached.Parse(buffer: buffer, args: &args, context: &context)
+            cached.parse(buffer: buffer, args: &args, context: &context)
         }
     }
     
@@ -78,7 +78,7 @@ struct SemanticLengthConsumerDynamicPart: DynamicPart, Codable
     {
         if buffer.isEmpty()
         {
-            return .Invalid
+            return .invalid
         }
         
         let (n, ok) = context.getInt(name: self.name)
@@ -88,13 +88,13 @@ struct SemanticLengthConsumerDynamicPart: DynamicPart, Codable
             self.cached = self.fix(count: n)
             
             guard let cached = self.cached else
-                { return .Invalid }
+                { return .invalid }
             
-            return cached.Validate(buffer: buffer, context: &context)
+            return cached.validate(buffer: buffer, context: &context)
         }
         else
         {
-            return .Invalid
+            return .invalid
         }
     }
     
@@ -143,7 +143,7 @@ struct SemanticSeedConsumerDynamicPart: DynamicPart, Codable
             }
             
             self.cached = self.fix(count: seed)
-            cached.Parse(buffer: buffer, args: &args, context: &context)
+            cached.parse(buffer: buffer, args: &args, context: &context)
         }
     }
     
@@ -151,7 +151,7 @@ struct SemanticSeedConsumerDynamicPart: DynamicPart, Codable
     {
         if buffer.isEmpty()
         {
-            return .Invalid
+            return .invalid
         }
         
         let (seed, ok) = context.getInt(name: self.name)
@@ -160,13 +160,13 @@ struct SemanticSeedConsumerDynamicPart: DynamicPart, Codable
             self.cached = self.fix(count: seed)
             
             guard let cached = self.cached else
-            { return .Invalid }
+            { return .invalid }
             
-            return cached.Validate(buffer: buffer, context: &context)
+            return cached.validate(buffer: buffer, context: &context)
         }
         else
         {
-            return .Invalid
+            return .invalid
         }
     }
     

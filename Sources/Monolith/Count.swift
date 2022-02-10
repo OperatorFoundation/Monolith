@@ -78,7 +78,7 @@ extension TimedPart: Countable
 {
     public func count() -> Int where T: ByteType
     {
-        return self.Items.count
+        return self.items.count
     }
 }
 
@@ -108,7 +108,7 @@ extension SemanticIntConsumerOptionalPart: Countable
 {
     func count() -> Int
     {
-        guard let cached = self.Cached else
+        guard let cached = self.cached else
             { return 0 }
         
         return cached.count()
@@ -119,7 +119,7 @@ extension SemanticIntProducerByteType: Countable
 {
     public func count() -> Int
     {
-        return self.Value.count()
+        return self.value.count()
     }
 }
 

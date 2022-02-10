@@ -24,7 +24,6 @@ public enum MonolithConfig: Codable
     case bytes(BytesPart)
 }
 
-
 public struct Description: Codable
 {
     let parts: [MonolithConfig]
@@ -35,7 +34,7 @@ public protocol Byteable
     mutating func bytes() -> [UInt8]
 }
 
-public protocol Messageable: Codable
+public protocol Messageable
 {
     func messageFromArgs(args: inout Args, context: inout Context) -> Message?
 }
@@ -96,7 +95,7 @@ public struct SemanticByteType: Codable {
 
 public typealias Message = Byteable
 
-public struct BytesMessage: Byteable, Equatable
+public struct BytesMessage: Message, Equatable
 {
     var messageBytes: [UInt8]
     

@@ -23,13 +23,13 @@ extension Empty: Countable {
 }
 
 extension Empty: Parseable {
-    func Parse(buffer: Buffer, args: inout Args, context: inout Context) {
+    func parse(buffer: Buffer, args: inout Args, context: inout Context) {
     }
 }
 
 extension Empty: Validateable {
-    func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        return .Valid
+    func validate(buffer: Buffer, context: inout Context) -> Validity {
+        return .valid
     }
 }
 
