@@ -17,7 +17,7 @@ extension Empty: Codable {
 
 extension Empty: Countable {
         
-    func Count() -> Int {
+    func count() -> Int {
         return 0
     }
 }
@@ -34,7 +34,7 @@ extension Empty: Validateable {
 }
 
 extension Empty: Messageable {
-    func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
+    func messageFromArgs(args: inout Args, context: inout Context) -> Message? {
     return nil
     }
 }

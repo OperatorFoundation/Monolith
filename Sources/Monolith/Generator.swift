@@ -2,16 +2,13 @@ import Foundation
 
 public struct Instance: Codable
 {
-    var Desc: Description
-    var Args: Args
-}
-
-extension Instance
-{
-    mutating func Messages() -> [Message]
+    var description: Description
+    var args: Args
+    
+    mutating func messages() -> [Message]
     {
         var context = Context()
-        let messages = self.Desc.MessagesFromArgs(args: &self.Args, context: &context)
+        let messages = self.description.MessagesFromArgs(args: &self.args, context: &context)
         var result: [Message] = []
 
         for message in messages
@@ -28,9 +25,9 @@ extension Description
     {
         var result: [Message] = []
         
-        for part in self.Parts
+        for part in self.parts
         {
-            guard let m = part.MessageFromArgs(args: &args, context: &context) else
+            guard let m = part.messageFromArgs(args: &args, context: &context) else
             {
                 continue
             }
@@ -44,47 +41,55 @@ extension Description
 
 extension BytesPart: Messageable
 {
-    public func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
+    public func messageFromArgs(args: inout Args, context: inout Context) -> Message?
+    {
         var result: [UInt8] = []
-        for item in self.Items {
-            let (maybeB, maybeError) = item.ByteFromArgs(args: &args, context: &context)
-            guard (maybeError == nil) else {
-                continue
-            }
-            guard let b = maybeB else {
-                continue
-            }
+        
+        for item in self.items
+        {
+            let (maybeB, maybeError) = item.byteFromArgs(args: &args, context: &context)
+            
+            guard (maybeError == nil) else
+                { continue }
+            
+            guard let b = maybeB else
+                { continue }
+            
             result.append(b)
         }
-        return BytesMessage(bytes: result)
+        
+        return BytesMessage(messageBytes: result)
     }
 }
 
 extension MonolithConfig: Messageable
 {
-    public func MessageFromArgs(args: inout Args, context: inout Context) -> Message?
+    public func messageFromArgs(args: inout Args, context: inout Context) -> Message?
     {
         switch self
         {
             case .bytes(let bytesPart):
-                return bytesPart.MessageFromArgs(args: &args, context: &context)
+                return bytesPart.messageFromArgs(args: &args, context: &context)
         }
     }
 }
 
-extension FixedByteType: ByteFromArgsable {
-    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
-        return (self.Byte, nil)
+extension FixedByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+        return (self.byte, nil)
     }
 }
 
-enum EnumeratedByteTypeError: Error {
+enum EnumeratedByteTypeError: Error
+{
     case popError
     case enumerationError
 }
 
-extension EnumeratedByteType: ByteFromArgsable {
-    public func ByteFromArgs(args: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+extension EnumeratedByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         let (maybeB, maybePopError) = args.popByte()
         if maybePopError != nil {
             return (0, EnumeratedByteTypeError.popError)
@@ -93,7 +98,7 @@ extension EnumeratedByteType: ByteFromArgsable {
             return (0, EnumeratedByteTypeError.popError)
         }
         
-        if self.Options.contains(b) {
+        if self.options.contains(b) {
             return (b, nil)
         } else {
             return (0, EnumeratedByteTypeError.enumerationError)
@@ -101,14 +106,61 @@ extension EnumeratedByteType: ByteFromArgsable {
     }
 }
 
-extension RandomByteType: ByteFromArgsable {
-    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+extension RandomByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
         return (UInt8.random(in: 0...255), nil)
     }
 }
 
-extension RandomEnumeratedByteType: ByteFromArgsable {
-    public func ByteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
-        return (self.RandomOptions.randomElement(), nil)
+extension RandomEnumeratedByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args _: inout Args, context _: inout Context) -> (UInt8?, Error?) {
+        return (self.randomOptions.randomElement(), nil)
+    }
+}
+
+extension SemanticIntProducerByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
+    {
+        let (maybeB, byteError) = self.Value.byteFromArgs(args: &args, context: &context)
+        if byteError != nil {
+            return (0, ByteFromArgsError.byteError)
+        }
+        
+        guard let b = maybeB else {
+            return (0, ByteFromArgsError.byteError)
+        }
+        let n = Int(b)
+        context.set(name: self.Name, value: n)
+        return (b, nil)
+    }
+    
+    enum ByteFromArgsError: Error
+    {
+        case byteError
+    }
+}
+
+extension SemanticIntConsumerByteType: ByteFromArgsable
+{
+    public func byteFromArgs(args: inout Args, context: inout Context) -> (UInt8?, Error?)
+    {
+        let (value, ok) = context.getInt(name: self.Name)
+        
+        if ok
+        {
+            return (UInt8(value), nil)
+        }
+        else
+        {
+            return (0, SemanticIntConsumerByteTypeError.undefinedVariableError)
+        }
+    }
+    
+    enum SemanticIntConsumerByteTypeError: Error
+    {
+        case undefinedVariableError
     }
 }

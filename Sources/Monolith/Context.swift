@@ -9,7 +9,6 @@ import Foundation
 
 public struct Context
 {
-    //This replaces map of strings to interface. Any represents...well... anything
     var values: [String: Any]
     
     public init()
@@ -17,33 +16,28 @@ public struct Context
         self.values = [String: Any]()
     }
     
-    mutating func Set(name:String, value: Any)
+    mutating func set(name: String, value: Any)
     {
         self.values[name] = value
     }
     
-    func Get(name:String) -> (Any, Bool)
+    func get(name: String) -> (Any, Bool)
     {
         guard let value = self.values[name] else
-        {
-            return ([], false)
-        }
+            { return ([], false) }
         
         return (value, true)
     }
     
-    func GetInt(name:String) -> (Int, Bool)
+    func getInt(name: String) -> (Int, Bool)
     {
-        let (value, ok) = self.Get(name: name)
-        guard ok else
-        {
-            return (0, false)
-        }
+        let (value, intFound) = self.get(name: name)
+        
+        guard intFound else
+            { return (0, false) }
         
         guard let intValue = value as? Int else
-        {
-            return (0, false)
-        }
+            { return (0, false) }
         
         return (intValue, true)
     }

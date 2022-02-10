@@ -14,9 +14,10 @@ struct SemanticIntConsumerOptionalPart {
     var Cached: Monolith?
 }
 
-extension SemanticIntConsumerOptionalPart {
+extension SemanticIntConsumerOptionalPart
+{
     func Fix(n: Int) -> Monolith {
-        if self.Condition.Evaluate(value: n) {
+        if self.Condition.evaluate(value: n) {
             return self.Item
         } else {
             return Empty()
@@ -28,7 +29,7 @@ extension SemanticIntConsumerOptionalPart {
             return
         }
         
-        let (n, ok) = context.GetInt(name: self.Name)
+        let (n, ok) = context.getInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
             self.Cached!.Parse(buffer: buffer, args: &args, context: &context)
@@ -40,7 +41,7 @@ extension SemanticIntConsumerOptionalPart {
             return Validity.Invalid as! Byteable
         }
         
-        let (n, ok) = context.GetInt(name: self.Name)
+        let (n, ok) = context.getInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
             return self.Cached!.Validate(buffer: buffer, context: &context) as! Byteable
@@ -51,21 +52,13 @@ extension SemanticIntConsumerOptionalPart {
     }
     
     mutating func MessageFromArgs(args: inout Args, context: inout Context) -> Message? {
-        let (n, ok) = context.GetInt(name: self.Name)
+        let (n, ok) = context.getInt(name: self.Name)
         if (ok) {
             self.Cached = self.Fix(n: n)
-            return self.Cached!.MessageFromArgs(args: &args, context: &context)
+            return self.Cached!.messageFromArgs(args: &args, context: &context)
         }
         else {
             return nil
-        }
-    }
-    
-    func Count() -> Int {
-        if self.Cached != nil {
-            return self.Cached!.Count()
-        } else {
-            return 0
         }
     }
 }

@@ -13,7 +13,7 @@ extension Description
 {
     func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        for part in self.Parts
+        for part in self.parts
         {
             part.Parse(buffer: buffer, args: &args, context: &context)
         }
@@ -24,7 +24,7 @@ extension BytesPart: Parseable
 {
     public func Parse(buffer: Buffer, args: inout Args, context: inout Context)
     {
-        for item in self.Items
+        for item in self.items
         {
             item.Parse(buffer: buffer, args: &args, context: &context)
         }
@@ -93,7 +93,7 @@ extension EnumeratedByteType: Parseable {
         }
         
         //TODO: reference this vs go if the code looks extra weird
-        let options = self.Options
+        let options = self.options
         
         //TODO: use this to initialize a set
         let set = Set(options)
@@ -133,7 +133,7 @@ extension RandomEnumeratedByteType: Parseable
                 return
             }
 
-        if self.RandomOptions.contains(arg) {
+        if self.randomOptions.contains(arg) {
                 return
             } else {
                 return

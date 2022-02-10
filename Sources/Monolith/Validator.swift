@@ -28,7 +28,7 @@ public protocol Validateable
 
 extension Description {
     func Validate(buffer: Buffer, context: inout Context) -> Validity {
-        for part in self.Parts {
+        for part in self.parts {
             let valid = part.Validate(buffer: buffer, context: &context)
             switch valid {
             case .Valid:
@@ -48,7 +48,7 @@ extension BytesPart: Validateable
 {
     public func Validate(buffer: Buffer, context: inout Context) -> Validity
     {
-        for item in self.Items
+        for item in self.items
         {
             let valid = item.Validate(buffer: buffer, context: &context)
             switch valid
@@ -116,7 +116,7 @@ extension FixedByteType: Validateable
             return .Invalid
         }
         
-        if b == self.Byte
+        if b == self.byte
         {
             return .Valid
         }
@@ -139,7 +139,7 @@ extension EnumeratedByteType: Validateable
             return .Invalid
         }
         
-        if self.Options.contains(b)
+        if self.options.contains(b)
         {
             return .Valid
         }
@@ -175,7 +175,7 @@ extension RandomEnumeratedByteType: Validateable {
             return .Invalid
         }
         
-        if self.RandomOptions.contains(b) {
+        if self.randomOptions.contains(b) {
             return .Valid
         } else {
             return .Invalid

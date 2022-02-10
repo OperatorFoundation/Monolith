@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Condition.swift
 //  
 //
 //  Created by Joshua Clark on 3/1/21.
@@ -9,87 +9,84 @@ import Foundation
 import Datable
 
 
-protocol Condition {
-    func Evaluate(value: Any) -> Bool
+protocol Condition
+{
+    func evaluate(value: Any) -> Bool
 }
 
-struct EqualsCondition {
+struct EqualsCondition: Condition
+{
     var other: Any
-}
-
-extension EqualsCondition {
-    // TODO: Reflecting/Mirror doesnt seem to have what we need.
-    mutating func Evaluate(value: Any) -> Bool {
-        guard let a = convertToInt64(value: value) else {
-            return false
-        }
+    
+    func evaluate(value: Any) -> Bool
+    {
+        guard let a = convertToInt64(value: value) else
+            { return false }
         
-        guard let b = convertToInt64(value: self.other) else {
-            return false
-        }
+        guard let b = convertToInt64(value: self.other) else
+            { return false }
         
         return a == b
     }
 }
 
-struct GreaterCondition {
+struct GreaterCondition: Condition
+{
     var other: Any
-}
-
-extension GreaterCondition {
-    mutating func Evaluate(value: Any) -> Bool {
-        guard let a = convertToInt64(value: value) else {
-            return false
-        }
+    
+    func evaluate(value: Any) -> Bool
+    {
+        guard let a = convertToInt64(value: value) else
+            { return false }
         
-        guard let b = convertToInt64(value: self.other) else {
-            return false
-        }
+        guard let b = convertToInt64(value: self.other) else
+            { return false }
         
         return a > b
     }
 }
 
-struct LesserCondition {
+struct LesserCondition: Condition
+{
     var other: Any
+    
+    func evaluate(value: Any) -> Bool
+    {
+        guard let a = convertToInt64(value: value) else
+            { return false }
+        
+        guard let b = convertToInt64(value: self.other) else
+            { return false }
+        
+        return a < b
+    }
 }
 
-extension LesserCondition {
-    mutating func Evaluate(value: Any) -> Bool {
-        guard let a = convertToInt64(value: value) else {
-        return false
-    }
-    
-        guard let b = convertToInt64(value: self.other) else {
-        return false
-    }
-    
-    return a < b
-    }
-}
-func convertToInt64(value: Any) -> Int64? {
-    switch value {
-    case let intValue as Int:
-        return Int64(intValue)
-    case let intValue as UInt:
-        return Int64(intValue)
-    case let intValue as Int8:
-        return Int64(intValue)
-    case let intValue as UInt8:
-        return Int64(intValue)
-    case let intValue as Int16:
-        return Int64(intValue)
-    case let intValue as UInt16:
-        return Int64(intValue)
-    case let intValue as Int32:
-        return Int64(intValue)
-    case let intValue as UInt32:
-        return Int64(intValue)
-    case let intValue as Int64:
-        return Int64(intValue)
-    case let intValue as UInt64:
-        return Int64(intValue)
-    default:
-        return 0
+func convertToInt64(value: Any) -> Int64?
+{
+    switch value
+    {
+        case let intValue as Int:
+            return Int64(intValue)
+        case let intValue as UInt:
+            return Int64(intValue)
+        case let intValue as Int8:
+            return Int64(intValue)
+        case let intValue as UInt8:
+            return Int64(intValue)
+        case let intValue as Int16:
+            return Int64(intValue)
+        case let intValue as UInt16:
+            return Int64(intValue)
+        case let intValue as Int32:
+            return Int64(intValue)
+        case let intValue as UInt32:
+            return Int64(intValue)
+        case let intValue as Int64:
+            return Int64(intValue)
+        case let intValue as UInt64:
+            return Int64(intValue)
+        default:
+            return 0
     }
 }

@@ -7,13 +7,13 @@ final class MonolithTests: XCTestCase
 {
     func testDescription()
     {
-        let correct = [BytesMessage](arrayLiteral: BytesMessage(bytes: [UInt8](arrayLiteral: 0x0A)))
+        let correct = [BytesMessage](arrayLiteral: BytesMessage(messageBytes: [UInt8](arrayLiteral: 0x0A)))
         var parts: [MonolithConfig] = []
-        let part = MonolithConfig.bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
+        let part = MonolithConfig.bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part)
-        let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: Args())
-        let result = instance.Messages()
+        let desc = Description(parts: parts)
+        var instance = Instance(description: desc, args: Args())
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
@@ -41,9 +41,9 @@ final class MonolithTests: XCTestCase
     func testDescriptionJSONSerialization()
     {
         var parts: [MonolithConfig] = []
-        let part: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
+        let part: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part)
-        let description = Description(Parts: parts)
+        let description = Description(parts: parts)
 
         let encoder = JSONEncoder()
 
@@ -58,19 +58,19 @@ final class MonolithTests: XCTestCase
     func testParts()
     {
         let correct = [
-            BytesMessage(bytes: [0x0A]),
-            BytesMessage(bytes: [0xB0])
+            BytesMessage(messageBytes: [0x0A]),
+            BytesMessage(messageBytes: [0xB0])
         ]
 
         var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0x0A))]))
+        let part1: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(Items: [.fixed(FixedByteType(Byte: 0xB0))]))
+        let part2: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0xB0))]))
         parts.append(part2)
         
-        let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: Args())
-        let result = instance.Messages()
+        let desc = Description(parts: parts)
+        var instance = Instance(description: desc, args: Args())
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
@@ -81,25 +81,25 @@ final class MonolithTests: XCTestCase
     func testFixedItems()
     {
         let correct = [
-            BytesMessage(bytes: [0x0A, 0x11]),
-            BytesMessage(bytes: [0xB0, 0xB1])
+            BytesMessage(messageBytes: [0x0A, 0x11]),
+            BytesMessage(messageBytes: [0xB0, 0xB1])
         ]
 
         var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(Items: [
-            .fixed(FixedByteType(Byte: 0x0A)),
-            .fixed(FixedByteType(Byte: 0x11))
+        let part1: MonolithConfig = .bytes(BytesPart(items: [
+            .fixed(FixedByteType(byte: 0x0A)),
+            .fixed(FixedByteType(byte: 0x11))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(Items: [
-            .fixed(FixedByteType(Byte: 0xB0)),
-            .fixed(FixedByteType(Byte: 0xB1))
+        let part2: MonolithConfig = .bytes(BytesPart(items: [
+            .fixed(FixedByteType(byte: 0xB0)),
+            .fixed(FixedByteType(byte: 0xB1))
         ]))
         parts.append(part2)
         
-        let desc = Description(Parts: parts)
-        var instance = Instance(Desc: desc, Args: Args())
-        let result = instance.Messages()
+        let desc = Description(parts: parts)
+        var instance = Instance(description: desc, args: Args())
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
@@ -110,27 +110,27 @@ final class MonolithTests: XCTestCase
     func testEnumeratedItems()
     {
         let correct = [
-            BytesMessage(bytes: [0x11, 0x12]),
-            BytesMessage(bytes: [0x14, 0x13])
+            BytesMessage(messageBytes: [0x11, 0x12]),
+            BytesMessage(messageBytes: [0x14, 0x13])
         ]
 
         let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
         var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(Items: [
-            .enumerated(EnumeratedByteType(Options: set)),
-            .enumerated(EnumeratedByteType(Options: set))
+        let part1: MonolithConfig = .bytes(BytesPart(items: [
+            .enumerated(EnumeratedByteType(options: set)),
+            .enumerated(EnumeratedByteType(options: set))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(Items: [
-            .enumerated(EnumeratedByteType(Options: set)),
-            .enumerated(EnumeratedByteType(Options: set))
+        let part2: MonolithConfig = .bytes(BytesPart(items: [
+            .enumerated(EnumeratedByteType(options: set)),
+            .enumerated(EnumeratedByteType(options: set))
         ]))
         parts.append(part2)
         
-        let desc = Description(Parts: parts)
+        let desc = Description(parts: parts)
         let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
-        var instance = Instance(Desc: desc, Args: args)
-        let result = instance.Messages()
+        var instance = Instance(description: desc, args: args)
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
@@ -144,21 +144,21 @@ final class MonolithTests: XCTestCase
         let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
         
         var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(Items: [
-            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set)),
-            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set))
+        let part1: MonolithConfig = .bytes(BytesPart(items: [
+            .randomEnumerated(RandomEnumeratedByteType(randomOptions: set)),
+            .randomEnumerated(RandomEnumeratedByteType(randomOptions: set))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(Items: [
-            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set)),
-            .randomEnumerated(RandomEnumeratedByteType(RandomOptions: set))
+        let part2: MonolithConfig = .bytes(BytesPart(items: [
+            .randomEnumerated(RandomEnumeratedByteType(randomOptions: set)),
+            .randomEnumerated(RandomEnumeratedByteType(randomOptions: set))
         ]))
         parts.append(part2)
         
-        let desc = Description(Parts: parts)
+        let desc = Description(parts: parts)
         let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
-        var instance = Instance(Desc: desc, Args: args)
-        let result = instance.Messages()
+        var instance = Instance(description: desc, args: args)
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
@@ -170,21 +170,21 @@ final class MonolithTests: XCTestCase
     {
         // no correct var for random in swift
         var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(Items: [
+        let part1: MonolithConfig = .bytes(BytesPart(items: [
             .random(RandomByteType()),
             .random(RandomByteType())
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(Items: [
+        let part2: MonolithConfig = .bytes(BytesPart(items: [
             .random(RandomByteType()),
             .random(RandomByteType())
         ]))
         parts.append(part2)
         
-        let desc = Description(Parts: parts)
+        let desc = Description(parts: parts)
         let args = Args(byteValues: [0x11, 0x12, 0x14, 0x13])
-        var instance = Instance(Desc: desc, Args: args)
-        let result = instance.Messages()
+        var instance = Instance(description: desc, args: args)
+        let result = instance.messages()
         guard let byteResult = result as? [BytesMessage] else {
             XCTFail()
             return
