@@ -196,8 +196,8 @@ final class MonolithTests: XCTestCase
 //    func TestTimedParts()
 //    {
 //        let correct = [
-//            TimedMessage(Milliseconds: 0, bytes: [0x0A]),
-//            TimedMessage(Milliseconds: 0, bytes: [0xB0])
+//            TimedMessage(milliseconds: 0, bytes: [0x0A]),
+//            TimedMessage(milliseconds: 0, bytes: [0xB0])
 //        ]
 //
 //        var parts: [MonolithConfig] = []
@@ -205,15 +205,15 @@ final class MonolithTests: XCTestCase
 //            .timed(TimedPart(Milliseconds: 0, Items: [ByteType(FixedByteType(Byte: 0x0A))]))
 //        ]))
 //        parts.append(part1)
-//        let part2: MonolithConfig = .bytes(BytesPart(Items: [
+//        let part2: MonolithConfig = .bytes(BytesPart(items: [
 //            .random(RandomByteType()),
 //            .random(RandomByteType())
 //        ]))
 //        parts.append(part2)
 //
-//        let desc = Description(Parts: parts)
+//        let desc = Description(parts: parts)
 //        let args = NewArgs(values: [0x11, 0x12, 0x14, 0x13])
-//        var instance = Instance(Desc: desc, Args: args)
+//        var instance = Instance(description: desc, args: args)
 //        let result = instance.Messages()
 //        guard let byteResult = result as? [BytesMessage] else {
 //            XCTFail()
