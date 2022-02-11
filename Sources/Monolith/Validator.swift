@@ -113,14 +113,14 @@ extension FixedByteType: Validateable
             return .incomplete
         }
         
-        let (b, popError) = buffer.pop()
+        let maybeFirst = buffer.pop()
         
-        if popError != nil
+        guard let first = maybeFirst else
         {
             return .invalid
         }
         
-        if b == self.byte
+        if first == self.byte
         {
             return .valid
         }
@@ -140,13 +140,14 @@ extension EnumeratedByteType: Validateable
             return .incomplete
         }
         
-        let (b, popError) = buffer.pop()
-        if popError != nil
+        let maybeFirst = buffer.pop()
+        
+        guard let first = maybeFirst else
         {
             return .invalid
         }
         
-        if self.options.contains(b)
+        if self.options.contains(first)
         {
             return .valid
         }
@@ -166,9 +167,9 @@ extension RandomByteType: Validateable
             return .incomplete
         }
         
-        let (_, popError) = buffer.pop()
+        let maybeFirst = buffer.pop()
         
-        if popError != nil
+        if maybeFirst == nil
         {
             return .invalid
         }
@@ -186,13 +187,14 @@ extension RandomEnumeratedByteType: Validateable
             return .incomplete
         }
         
-        let (b, popError) = buffer.pop()
-        if popError != nil
+        let maybeFirst = buffer.pop()
+        
+        guard let first = maybeFirst else
         {
             return .invalid
         }
         
-        if self.randomOptions.contains(b)
+        if self.randomOptions.contains(first)
         {
             return .valid
         }
@@ -212,17 +214,18 @@ extension SemanticIntProducerByteType: Validateable
             return .incomplete
         }
         
-        let (b, maybeError) = buffer.pop()
-        guard maybeError == nil else
+        let maybeFirst = buffer.pop()
+        
+        guard let first = maybeFirst else
         {
             return .invalid
         }
         
-        let subbuffer = Buffer(value: [b])
+        let subbuffer = Buffer(value: [first])
         
         if self.value.validate(buffer: subbuffer, context: &context) == Validity.valid
         {
-            let intValue = Int(b)
+            let intValue = Int(first)
             context.set(name: self.name, value: intValue)
             
             return .valid
@@ -243,14 +246,15 @@ extension SemanticIntConsumerByteType: Validateable
             return .incomplete
         }
         
-        let (b, maybeError) = buffer.pop()
+        let maybeFirst = buffer.pop()
         
-        guard maybeError == nil else
+        guard let first = maybeFirst else
             { return .invalid }
         
-        let n = Int(b)
+        let n = Int(first)
         
         let (value, ok) = context.getInt(name: self.name)
+        
         if ok
         {
             if n == value

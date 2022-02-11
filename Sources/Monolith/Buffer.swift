@@ -27,20 +27,20 @@ public class Buffer: Codable
     }
     
     /// Removes the first element from the value array
-    func pop() -> (UInt8, Error?)
+    public func pop() -> UInt8?
     {
         if (self.value.isEmpty)
         {
-            return (0, Error.emptyBufferError)
+            return nil
         }
         
         let first = self.value.removeFirst()
         
-        return (first, nil)
+        return first
     }
    
     /// Removes the first n elements from the value array
-    func popByte(elementsToRemove: Int) -> ([UInt8], Error?)
+    public func popByte(elementsToRemove: Int) -> ([UInt8], Error?)
     {
         if (self.value.count < elementsToRemove)
         {
@@ -53,7 +53,7 @@ public class Buffer: Codable
         return (removed, nil)
     }
     
-    func push(bytes: [UInt8])
+    public func push(bytes: [UInt8])
     {
         self.value.append(contentsOf: bytes)
     }

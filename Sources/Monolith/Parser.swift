@@ -74,12 +74,12 @@ extension FixedByteType: Parseable
             return
         }
         
-       let (_, popError) = buffer.pop()
+       let _ = buffer.pop()
         
-        if popError != nil
-        {
-            return
-        }
+//        if popError != nil
+//        {
+//            return
+//        }
     }
 }
 
@@ -92,7 +92,7 @@ extension EnumeratedByteType: Parseable
             return
         }
         
-        let (arg, _) = buffer.pop()
+        let maybeArg = buffer.pop()
         
         if buffer.isEmpty()
         {
@@ -101,7 +101,13 @@ extension EnumeratedByteType: Parseable
                 
         let set = Set(options)
         
+        guard let arg = maybeArg else
+        {
+            return
+        }
+        
         // FIXME: What is the intent here?
+        
         if set.contains(arg)
         {
             return
@@ -122,12 +128,12 @@ extension RandomByteType: Parseable
             return
         }
 
-       let (_, popError) = buffer.pop()
+       let _ = buffer.pop()
         
-        if popError != nil
-        {
-            return
-        }
+//        if popError != nil
+//        {
+//            return
+//        }
     }
 }
 
@@ -140,11 +146,10 @@ extension RandomEnumeratedByteType: Parseable
             return
         }
         
-        let (arg, popError) = buffer.pop()
-        if popError != nil
-        {
-            return
-        }
+        let maybeArg = buffer.pop()
+        
+        guard let arg = maybeArg else
+            { return }
 
         if self.randomOptions.contains(arg)
         {
@@ -166,16 +171,19 @@ extension SemanticIntConsumerByteType: Parseable
             return
         }
         
-        let (b, popError) = buffer.pop()
-        if popError != nil {
-            return
-        }
+        let maybeFirst = buffer.pop()
         
-        let n = Int(b)
+        guard let first = maybeFirst else
+            { return }
+        
+        let n = Int(first)
         
         let (value, ok) = context.getInt(name: self.name)
-        if ok {
-            if n == value {
+        
+        if ok
+        {
+            if n == value
+            {
                 args.push(value: .int(n))
             }
         }
@@ -191,12 +199,12 @@ extension SemanticIntProducerByteType: Parseable
             return
         }
         
-        let (b, popError) = buffer.pop()
-        if popError != nil {
-            return
-        }
+        let maybeFirst = buffer.pop()
         
-        let value = Int(b)
+        guard let first = maybeFirst else
+            { return }
+        
+        let value = Int(first)
         
         context.set(name: self.name, value: value)
     }
