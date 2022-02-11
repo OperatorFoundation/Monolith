@@ -27,6 +27,11 @@ public enum MonolithConfig: Codable
 public struct Description: Codable
 {
     public let parts: [MonolithConfig]
+    
+    public init(parts: [MonolithConfig])
+    {
+        self.parts = parts
+    }
 }
 
 public protocol Byteable
