@@ -14,11 +14,22 @@ enum SemanticError: Error
 
 public struct SemanticIntProducerByteType: Codable
 {
-    let name: String
-    let value: ByteTypeConfig
+    public let name: String
+    public let value: ByteTypeConfig
+    
+    public init(name: String, value: ByteTypeConfig)
+    {
+        self.name = name
+        self.value = value
+    }
 }
 
 public struct SemanticIntConsumerByteType: Codable
 {
-    let name: String
+    public let name: String
+    
+    public init(name: String)
+    {
+        self.name = name
+    }
 }

@@ -47,6 +47,11 @@ public protocol Messageable
 public struct BytesPart: Codable
 {
     public let items: [ByteTypeConfig]
+    
+    public init(items: [ByteTypeConfig])
+    {
+        self.items = items
+    }
 }
 
 public protocol ByteFromArgsable
@@ -78,24 +83,44 @@ extension ByteTypeConfig: ByteFromArgsable
 
 public typealias ByteType = Validateable & Parseable & Countable & ByteFromArgsable
 
-public struct FixedByteType: Codable {
+public struct FixedByteType: Codable
+{
     public let byte: UInt8
+    
+    public init(byte: UInt8)
+    {
+        self.byte = byte
+    }
 }
 
-public struct EnumeratedByteType: Codable {
+public struct EnumeratedByteType: Codable
+{
     public let options: [UInt8]
-}
-
-public struct RandomByteType: Codable {
     
+    public init(options: [UInt8])
+    {
+        self.options = options
+    }
 }
 
-public struct RandomEnumeratedByteType: Codable {
+public struct RandomByteType: Codable
+{
+    public init() {}
+}
+
+public struct RandomEnumeratedByteType: Codable
+{
     public let randomOptions: [UInt8]
+    
+    public init(randomOptions: [UInt8])
+    {
+        self.randomOptions = randomOptions
+    }
 }
 
-public struct SemanticByteType: Codable {
-    
+public struct SemanticByteType: Codable
+{
+    public init() {}
 }
 
 public typealias Message = Byteable
