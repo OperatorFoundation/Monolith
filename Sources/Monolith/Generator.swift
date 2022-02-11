@@ -5,6 +5,12 @@ public struct Instance: Codable
     var description: Description
     var args: Args
     
+    public init(description: Description, args: Args)
+    {
+        self.description = description
+        self.args = args
+    }
+    
     public mutating func messages() -> [Message]
     {
         var context = Context()
