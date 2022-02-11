@@ -129,6 +129,11 @@ public struct BytesMessage: Message, Equatable
 {
     public var messageBytes: [UInt8]
     
+    public init(messageBytes: [UInt8])
+    {
+        self.messageBytes = messageBytes
+    }
+    
     public mutating func bytes() -> [UInt8]
     {
         return self.messageBytes
