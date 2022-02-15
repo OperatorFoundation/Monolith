@@ -96,6 +96,7 @@ public struct FixedByteType: Codable
 public struct EnumeratedByteType: Codable
 {
     public let options: [UInt8]
+    public var name: String? = nil
     
     public init(options: [UInt8])
     {

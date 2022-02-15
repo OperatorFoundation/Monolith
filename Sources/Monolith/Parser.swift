@@ -110,6 +110,11 @@ extension EnumeratedByteType: Parseable
         
         if set.contains(arg)
         {
+            if let typeName = self.name
+            {
+                context.set(name: typeName, value: arg)
+            }
+            
             return
         }
         else
