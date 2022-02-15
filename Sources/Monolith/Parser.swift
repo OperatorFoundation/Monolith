@@ -53,7 +53,7 @@ extension ByteTypeConfig: Parseable
     }
 }
 
-extension MonolithConfig: Parseable
+extension MonolithPart: Parseable
 {
     public func parse(buffer: Buffer, args: inout Args, context: inout Context)
     {

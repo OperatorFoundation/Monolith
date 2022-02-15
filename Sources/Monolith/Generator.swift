@@ -68,7 +68,7 @@ extension BytesPart: Messageable
     }
 }
 
-extension MonolithConfig: Messageable
+extension MonolithPart: Messageable
 {
     public func messageFromArgs(args: inout Args, context: inout Context) -> Message?
     {

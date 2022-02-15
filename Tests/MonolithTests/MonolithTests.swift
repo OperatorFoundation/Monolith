@@ -8,8 +8,8 @@ final class MonolithTests: XCTestCase
     func testDescription()
     {
         let correct = [BytesMessage](arrayLiteral: BytesMessage(messageBytes: [UInt8](arrayLiteral: 0x0A)))
-        var parts: [MonolithConfig] = []
-        let part = MonolithConfig.bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
+        var parts: [MonolithPart] = []
+        let part = MonolithPart.bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part)
         let desc = Description(parts: parts)
         var instance = Instance(description: desc, args: Args())
@@ -40,8 +40,8 @@ final class MonolithTests: XCTestCase
     
     func testDescriptionJSONSerialization()
     {
-        var parts: [MonolithConfig] = []
-        let part: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
+        var parts: [MonolithPart] = []
+        let part: MonolithPart = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part)
         let description = Description(parts: parts)
 
@@ -62,10 +62,10 @@ final class MonolithTests: XCTestCase
             BytesMessage(messageBytes: [0xB0])
         ]
 
-        var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
+        var parts: [MonolithPart] = []
+        let part1: MonolithPart = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0x0A))]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0xB0))]))
+        let part2: MonolithPart = .bytes(BytesPart(items: [.fixed(FixedByteType(byte: 0xB0))]))
         parts.append(part2)
         
         let desc = Description(parts: parts)
@@ -85,13 +85,13 @@ final class MonolithTests: XCTestCase
             BytesMessage(messageBytes: [0xB0, 0xB1])
         ]
 
-        var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(items: [
+        var parts: [MonolithPart] = []
+        let part1: MonolithPart = .bytes(BytesPart(items: [
             .fixed(FixedByteType(byte: 0x0A)),
             .fixed(FixedByteType(byte: 0x11))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(items: [
+        let part2: MonolithPart = .bytes(BytesPart(items: [
             .fixed(FixedByteType(byte: 0xB0)),
             .fixed(FixedByteType(byte: 0xB1))
         ]))
@@ -115,13 +115,13 @@ final class MonolithTests: XCTestCase
         ]
 
         let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
-        var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(items: [
+        var parts: [MonolithPart] = []
+        let part1: MonolithPart = .bytes(BytesPart(items: [
             .enumerated(EnumeratedByteType(options: set)),
             .enumerated(EnumeratedByteType(options: set))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(items: [
+        let part2: MonolithPart = .bytes(BytesPart(items: [
             .enumerated(EnumeratedByteType(options: set)),
             .enumerated(EnumeratedByteType(options: set))
         ]))
@@ -143,13 +143,13 @@ final class MonolithTests: XCTestCase
     {
         let set: [uint8] = [0x11, 0x12, 0x13, 0x14]
         
-        var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(items: [
+        var parts: [MonolithPart] = []
+        let part1: MonolithPart = .bytes(BytesPart(items: [
             .randomEnumerated(RandomEnumeratedByteType(randomOptions: set)),
             .randomEnumerated(RandomEnumeratedByteType(randomOptions: set))
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(items: [
+        let part2: MonolithPart = .bytes(BytesPart(items: [
             .randomEnumerated(RandomEnumeratedByteType(randomOptions: set)),
             .randomEnumerated(RandomEnumeratedByteType(randomOptions: set))
         ]))
@@ -169,13 +169,13 @@ final class MonolithTests: XCTestCase
     func testRandomItems()
     {
         // no correct var for random in swift
-        var parts: [MonolithConfig] = []
-        let part1: MonolithConfig = .bytes(BytesPart(items: [
+        var parts: [MonolithPart] = []
+        let part1: MonolithPart = .bytes(BytesPart(items: [
             .random(RandomByteType()),
             .random(RandomByteType())
         ]))
         parts.append(part1)
-        let part2: MonolithConfig = .bytes(BytesPart(items: [
+        let part2: MonolithPart = .bytes(BytesPart(items: [
             .random(RandomByteType()),
             .random(RandomByteType())
         ]))

@@ -19,16 +19,16 @@ public indirect enum ByteTypeConfig: Codable
     case semanticIntProducer(SemanticIntProducerByteType)
 }
 
-public enum MonolithConfig: Codable
+public enum MonolithPart: Codable
 {
     case bytes(BytesPart)
 }
 
 public struct Description: Codable
 {
-    public let parts: [MonolithConfig]
+    public let parts: [MonolithPart]
     
-    public init(parts: [MonolithConfig])
+    public init(parts: [MonolithPart])
     {
         self.parts = parts
     }

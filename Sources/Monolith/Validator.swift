@@ -92,7 +92,7 @@ extension ByteTypeConfig: Validateable
     }
 }
 
-extension MonolithConfig: Validateable
+extension MonolithPart: Validateable
 {
     public func validate(buffer: Buffer, context: inout Context) -> Validity
     {
