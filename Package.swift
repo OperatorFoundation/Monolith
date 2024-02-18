@@ -16,7 +16,7 @@ let package = Package(
             targets: ["Monolith"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-crypto", from: "2.5.0"),
+        .package(url: "https://github.com/apple/swift-crypto", from: "3.2.0"),
         .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Song", branch: "main"),
     ],
