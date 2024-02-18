@@ -17,8 +17,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-crypto", from: "3.2.0"),
-        .package(url: "https://github.com/OperatorFoundation/Datable", from: "4.0.0"),
-        .package(url: "https://github.com/OperatorFoundation/Song", branch: "release"),
+        .package(url: "https://github.com/OperatorFoundation/Datable", from: "4.0.1"),
+        .package(url: "https://github.com/OperatorFoundation/Song", from: "0.2.7"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
